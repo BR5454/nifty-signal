@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nifty 50 Signal — B108482</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jssha/3.3.1/sha.min.js"></script>
+
 <style>
   :root {
     --bg: #0a0c0f; --bg2: #111318; --bg3: #181c23;
@@ -315,34 +315,31 @@ let autoOn = false;
 let cdInterval = null;
 let countdown = 0;
 
-// ─── TOTP GENERATOR ──────────────────────────────────
-// RFC 6238 TOTP using jsSHA
+// ─── TOTP GENERATOR (pure Web Crypto — no external library) ──
 function base32Decode(s) {
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
   s = s.replace(/=+$/, '').toUpperCase();
-  let bits = 0, value = 0;
+  let bits = 0, val = 0;
   const out = [];
   for (let i = 0; i < s.length; i++) {
-    value = (value << 5) | alphabet.indexOf(s[i]);
+    val = (val << 5) | alpha.indexOf(s[i]);
     bits += 5;
-    if (bits >= 8) { out.push((value >>> (bits - 8)) & 255); bits -= 8; }
+    if (bits >= 8) { out.push((val >>> (bits - 8)) & 0xff); bits -= 8; }
   }
-  return out;
+  return new Uint8Array(out);
 }
 
-function generateTOTP(secret) {
-  const key = base32Decode(secret);
+async function generateTOTP(secret) {
+  const keyBytes = base32Decode(secret);
   const epoch = Math.floor(Date.now() / 1000);
   let counter = Math.floor(epoch / 30);
-  const msg = new Array(8).fill(0);
+  const msg = new Uint8Array(8);
   for (let i = 7; i >= 0; i--) { msg[i] = counter & 0xff; counter = Math.floor(counter / 256); }
-  // Use jsSHA for HMAC-SHA1
-  const shaObj = new jsSHA('SHA-1', 'ARRAYBUFFER');
-  const keyBuf = new Uint8Array(key).buffer;
-  const msgBuf = new Uint8Array(msg).buffer;
-  shaObj.setHMACKey(keyBuf, 'ARRAYBUFFER');
-  shaObj.update(msgBuf);
-  const hmac = new Uint8Array(shaObj.getHMAC('ARRAYBUFFER'));
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw', keyBytes, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', cryptoKey, msg);
+  const hmac = new Uint8Array(sig);
   const offset = hmac[19] & 0xf;
   const code = ((hmac[offset] & 0x7f) << 24) | (hmac[offset+1] << 16) | (hmac[offset+2] << 8) | hmac[offset+3];
   return String(code % 1000000).padStart(6, '0');
@@ -383,7 +380,7 @@ async function doLogin() {
   addLog('Generating TOTP...', 'inf');
 
   let totp;
-  try { totp = generateTOTP(CREDS.totpSecret); }
+  try { totp = await generateTOTP(CREDS.totpSecret); }
   catch(e) { showError('TOTP generation failed: ' + e.message); btn.disabled=false; btn.textContent='AUTO LOGIN'; return; }
   addLog(`TOTP generated: ${totp}`, 'ok');
 
@@ -457,7 +454,7 @@ async function doLoginWithPassword() {
   addLog('Attempting login with password + TOTP...', 'inf');
 
   let totp;
-  try { totp = generateTOTP(CREDS.totpSecret); }
+  try { totp = await generateTOTP(CREDS.totpSecret); }
   catch(e) { showError('TOTP error: ' + e.message); btn.disabled=false; btn.textContent='LOGIN'; return; }
 
   try {
