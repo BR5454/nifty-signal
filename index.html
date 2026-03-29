@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nifty 50 — Live Paper Trading Bot</title>
+<title>Nifty 50 — 15 Bot Arena</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -18,156 +18,155 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:1
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:linear-gradient(rgba(255,255,255,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.012) 1px,transparent 1px);
   background-size:50px 50px;}
-.wrap{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:18px 20px;}
+.wrap{position:relative;z-index:1;max-width:1500px;margin:0 auto;padding:18px 20px;}
 
-/* HEADER */
-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);}
 .logo{font-family:var(--display);font-size:18px;font-weight:800;letter-spacing:-0.5px;}
 .logo span{color:var(--green);}
-.logo .tag{font-size:10px;font-weight:400;color:var(--muted);margin-left:8px;letter-spacing:.5px;}
+.logo .tag{font-size:10px;font-weight:400;color:var(--muted);margin-left:8px;}
 .hdr-right{display:flex;align-items:center;gap:12px;font-size:11px;color:var(--muted);}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;display:inline-block;margin-right:4px;}
 .dot.closed{background:var(--red);animation:none;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
 
-/* BOT STATUS BAR */
-.bot-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px;}
-.bot-stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
-.bot-stat-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
-.bot-stat-val{font-family:var(--display);font-size:20px;font-weight:800;}
-.bot-stat-sub{font-size:9px;color:var(--muted);margin-top:2px;}
-.bsv-green{color:var(--green);}.bsv-red{color:var(--red);}.bsv-amber{color:var(--amber);}.bsv-blue{color:var(--blue);}
+.tab-bar{display:flex;gap:3px;margin-bottom:16px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:3px;}
+.tab{flex:1;text-align:center;padding:7px 10px;border-radius:7px;font-size:11px;font-weight:700;font-family:var(--display);letter-spacing:.5px;cursor:pointer;color:var(--muted);transition:all .18s;}
+.tab.active{background:var(--bg4);color:var(--text);}
+.tab-content{display:none;}.tab-content.active{display:block;}
 
-/* CONTROL ROW */
-.ctrl-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
-.btn{background:var(--green);color:#000;border:none;border-radius:7px;padding:8px 18px;font-family:var(--display);font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s;white-space:nowrap;}
-.btn:hover{opacity:.82;}.btn:active{transform:scale(.97);}.btn:disabled{opacity:.3;cursor:not-allowed;}
-.btn-red{background:var(--red);color:#fff;}.btn-amber{background:var(--amber);color:#000;}
-.btn-ghost{background:var(--bg3);color:var(--muted);border:1px solid var(--border2);}
-.btn-sm{padding:5px 12px;font-size:10px;}
-.sel{background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:5px 9px;font-family:var(--mono);font-size:11px;color:var(--text);outline:none;cursor:pointer;}
-
-/* BOT STATUS BADGE */
-.bot-status-wrap{display:flex;align-items:center;gap:8px;}
-.bot-badge{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;}
-.bot-badge.stopped{background:rgba(86,97,117,.15);color:var(--muted);border:1px solid rgba(86,97,117,.3);}
-.bot-badge.running{background:rgba(15,204,126,.1);color:var(--green);border:1px solid rgba(15,204,126,.25);}
-.bot-badge.running .bdot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1s infinite;}
-.bot-badge.stopped .bdot{width:6px;height:6px;border-radius:50%;background:var(--muted);}
-.cd-badge{font-size:11px;color:var(--muted);}
-
-/* STATUS CARD */
-.status-card{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:11px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.status-card{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:10px 16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
 .cred-info{font-size:11px;color:var(--muted);}.cred-info strong{color:var(--text);}
 .sbadge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(240,157,13,.1);color:var(--amber);border:1px solid rgba(240,157,13,.25);}
 .sbadge.ok{background:rgba(15,204,126,.1);color:var(--green);border-color:rgba(15,204,126,.25);}
 .error-box{background:rgba(240,58,95,0.08);border:1px solid rgba(240,58,95,0.25);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--red);margin-bottom:12px;display:none;}
 
-/* MAIN LAYOUT */
-.main-grid{display:grid;grid-template-columns:1fr 340px;gap:14px;margin-bottom:14px;}
+.btn{background:var(--green);color:#000;border:none;border-radius:7px;padding:8px 18px;font-family:var(--display);font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s;white-space:nowrap;}
+.btn:hover{opacity:.82;}.btn:active{transform:scale(.97);}.btn:disabled{opacity:.3;cursor:not-allowed;}
+.btn-red{background:var(--red);color:#fff;}.btn-blue{background:var(--blue);color:#000;}.btn-amber{background:var(--amber);color:#000;}
+.btn-ghost{background:var(--bg3);color:var(--muted);border:1px solid var(--border2);}
+.btn-sm{padding:5px 12px;font-size:10px;}
+.sel{background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:5px 9px;font-family:var(--mono);font-size:11px;color:var(--text);outline:none;cursor:pointer;}
 
-/* SIGNAL PANEL */
-.signal-panel{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;position:relative;overflow:hidden;transition:border-color .4s,background .4s;}
-.signal-panel.ce{border-color:rgba(15,204,126,.4);background:radial-gradient(ellipse at center top,rgba(15,204,126,.08),var(--bg2) 60%);}
-.signal-panel.pe{border-color:rgba(240,58,95,.4);background:radial-gradient(ellipse at center top,rgba(240,58,95,.08),var(--bg2) 60%);}
-.signal-panel.wait{border-color:rgba(240,157,13,.3);}
-.signal-panel.trade-active{box-shadow:0 0 0 2px var(--green);}
-.sp-time{position:absolute;top:12px;right:14px;font-size:9px;color:var(--muted);}
-.sp-candle{position:absolute;top:12px;left:14px;font-size:9px;color:var(--purple);}
-.sp-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-family:var(--display);}
-.sp-val{font-family:var(--display);font-size:54px;font-weight:800;line-height:1;letter-spacing:-2px;}
-.sp-val.g{color:var(--green);text-shadow:0 0 40px rgba(15,204,126,.35);}
-.sp-val.r{color:var(--red);text-shadow:0 0 40px rgba(240,58,95,.35);}
-.sp-val.a{color:var(--amber);}
-.sp-val.m{color:var(--muted);}
-.sp-sub{font-size:11px;color:var(--muted);margin-top:6px;}
-.vote-row{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap;}
-.vote-pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;}
-.vp-ce{background:rgba(15,204,126,.12);color:var(--green);border:1px solid rgba(15,204,126,.25);}
-.vp-pe{background:rgba(240,58,95,.12);color:var(--red);border:1px solid rgba(240,58,95,.25);}
-.vp-wa{background:rgba(240,157,13,.1);color:var(--amber);border:1px solid rgba(240,157,13,.2);}
-.conf-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px;}
-.conf-track{width:180px;height:4px;background:var(--bg3);border-radius:4px;overflow:hidden;}
-.conf-fill{height:100%;border-radius:4px;transition:width .6s cubic-bezier(.4,0,.2,1);width:0%;}
+/* ARENA HEADER STATS */
+.arena-stats{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:14px;}
+.astat{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:10px 12px;}
+.astat-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.astat-val{font-family:var(--display);font-size:18px;font-weight:800;}
+.astat-sub{font-size:9px;color:var(--muted);margin-top:2px;}
 
-/* ACTIVE TRADE PANEL */
-.trade-panel{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;}
-.tp-title{font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
-.no-trade{text-align:center;padding:40px 0;color:var(--muted);font-size:12px;}
-.active-trade{display:none;}
-.at-type{font-family:var(--display);font-size:28px;font-weight:800;margin-bottom:8px;}
-.at-type.ce{color:var(--green);}.at-type.pe{color:var(--red);}
-.at-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:11px;}
-.at-row:last-child{border-bottom:none;}
-.at-lbl{color:var(--muted);}
-.at-val{font-weight:600;}
-.pnl-live{font-family:var(--display);font-size:22px;font-weight:800;margin-top:12px;text-align:center;}
-.sl-bar-wrap{margin-top:10px;}
-.sl-bar-lbl{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-bottom:4px;}
-.sl-bar-track{height:5px;background:var(--bg3);border-radius:5px;overflow:hidden;}
-.sl-bar-fill{height:100%;border-radius:5px;transition:width .4s ease,background .4s;}
-.exit-btn{width:100%;margin-top:12px;background:var(--red);color:#fff;border:none;border-radius:7px;padding:9px;font-family:var(--display);font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s;}
-.exit-btn:hover{opacity:.85;}
+/* CONTROL ROW */
+.ctrl-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.arena-badge{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;}
+.arena-badge.stopped{background:rgba(86,97,117,.15);color:var(--muted);border:1px solid rgba(86,97,117,.25);}
+.arena-badge.running{background:rgba(15,204,126,.1);color:var(--green);border:1px solid rgba(15,204,126,.25);}
+.arena-badge.running .bdot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1s infinite;}
+.arena-badge.stopped .bdot{width:6px;height:6px;border-radius:50%;background:var(--muted);}
 
-/* STRATEGY MINI GRID */
-.strat-mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px;}
-.smc{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;}
-.smc.ce{border-color:rgba(15,204,126,.3);background:rgba(15,204,126,.03);}
-.smc.pe{border-color:rgba(240,58,95,.3);background:rgba(240,58,95,.03);}
-.smc-name{font-size:9px;color:var(--muted);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.smc-sig{font-size:10px;font-weight:700;}
-.smc-sig.g{color:var(--green);}.smc-sig.r{color:var(--red);}.smc-sig.a{color:var(--muted);}
+/* BOT CARDS GRID */
+.bots-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px;}
+.bot-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.bot-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:12px 12px 0 0;background:var(--muted);transition:background .3s;}
+.bot-card.trading-ce::before{background:var(--green);}
+.bot-card.trading-pe::before{background:var(--red);}
+.bot-card.winner{border-color:rgba(15,204,126,.5);background:rgba(15,204,126,.04);}
+.bot-card.winner::before{background:var(--green);box-shadow:0 0 12px var(--green);}
+.bc-rank{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;}
+.bc-rank.r1{background:rgba(15,204,126,.15);color:var(--green);border:1px solid rgba(15,204,126,.3);}
+.bc-rank.r2{background:rgba(51,181,245,.1);color:var(--blue);border:1px solid rgba(51,181,245,.2);}
+.bc-rank.r3{background:rgba(155,127,245,.1);color:var(--purple);border:1px solid rgba(155,127,245,.2);}
+.bc-rank.rx{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--border);}
+.bc-name{font-family:var(--display);font-size:11px;font-weight:700;margin-bottom:2px;padding-right:36px;}
+.bc-type{font-size:9px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;}
+.bc-bal{font-family:var(--display);font-size:20px;font-weight:800;margin-bottom:2px;}
+.bc-pnl{font-size:10px;font-weight:700;margin-bottom:6px;}
+.bc-pnl.pos{color:var(--green);}.bc-pnl.neg{color:var(--red);}.bc-pnl.zero{color:var(--muted);}
+.bc-trade{font-size:9px;padding:3px 8px;border-radius:8px;display:inline-block;margin-bottom:6px;}
+.bc-trade.ce{background:rgba(15,204,126,.1);color:var(--green);border:1px solid rgba(15,204,126,.2);}
+.bc-trade.pe{background:rgba(240,58,95,.1);color:var(--red);border:1px solid rgba(240,58,95,.2);}
+.bc-trade.idle{background:rgba(86,97,117,.1);color:var(--muted);border:1px solid rgba(86,97,117,.2);}
+.bc-signal{font-size:9px;color:var(--muted);}
+.bc-stats{display:flex;gap:8px;margin-top:6px;border-top:1px solid var(--border);padding-top:6px;}
+.bc-stat{flex:1;text-align:center;}
+.bc-stat-lbl{font-size:8px;color:var(--muted);letter-spacing:.5px;}
+.bc-stat-val{font-size:11px;font-weight:700;font-family:var(--display);}
+.bc-bar{height:3px;background:var(--bg3);border-radius:3px;margin-top:6px;overflow:hidden;}
+.bc-bar-fill{height:100%;border-radius:3px;transition:width .5s ease,background .3s;}
 
-/* TRADE HISTORY */
-.panel{background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:14px;overflow:hidden;}
+/* LEADERBOARD */
+.leaderboard{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
 .panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border);}
 .panel-title{font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
-.hist-table{width:100%;border-collapse:collapse;font-size:10px;}
-.hist-table th{padding:7px 14px;text-align:left;color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);font-weight:400;}
-.hist-table td{padding:7px 14px;border-bottom:1px solid rgba(255,255,255,0.025);}
-.hist-table tr:last-child td{border-bottom:none;}
-.ttype{font-weight:700;font-size:9px;padding:2px 7px;border-radius:8px;display:inline-block;}
+.lb-table{width:100%;border-collapse:collapse;font-size:10px;}
+.lb-table th{padding:6px 12px;text-align:left;color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);font-weight:400;}
+.lb-table td{padding:6px 12px;border-bottom:1px solid rgba(255,255,255,0.025);}
+.lb-table tr:last-child td{border-bottom:none;}
+.lb-table tr.lb-top td{background:rgba(15,204,126,0.04);}
+.rank-badge{font-size:9px;font-weight:700;padding:1px 6px;border-radius:7px;}
+.r1{background:rgba(15,204,126,.15);color:var(--green);border:1px solid rgba(15,204,126,.3);}
+.r2{background:rgba(51,181,245,.1);color:var(--blue);border:1px solid rgba(51,181,245,.2);}
+.r3{background:rgba(155,127,245,.1);color:var(--purple);border:1px solid rgba(155,127,245,.2);}
+.rx{background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--border);}
+.ttype{font-size:9px;font-weight:700;padding:1px 6px;border-radius:7px;display:inline-block;}
 .tce{background:rgba(15,204,126,.1);color:var(--green);}.tpe{background:rgba(240,58,95,.1);color:var(--red);}
 .pp{color:var(--green);font-weight:700;}.np{color:var(--red);font-weight:700;}
-.hist-scroll{max-height:280px;overflow-y:auto;}
-.hist-scroll::-webkit-scrollbar{width:3px;}.hist-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+.eq-canvas{width:100%;height:100px;}
 
-/* EQUITY MINI CHART */
-.eq-mini{width:100%;height:80px;}
+/* TRADE FEED */
+.trade-feed{max-height:300px;overflow-y:auto;}
+.trade-feed::-webkit-scrollbar{width:3px;}.trade-feed::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+.feed-row{display:flex;align-items:flex-start;gap:10px;padding:6px 14px;border-bottom:1px solid rgba(255,255,255,0.025);font-size:10px;}
+.feed-ts{color:var(--muted);min-width:56px;font-size:9px;}
+.feed-bot{color:var(--blue);font-weight:700;min-width:70px;}
+.feed-msg{flex:1;color:var(--text);}
+.feed-pnl{font-weight:700;min-width:60px;text-align:right;}
+
+/* BACKTEST */
+.bt-controls{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end;margin-bottom:14px;}
+.field label{display:block;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.field select,.field input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-family:var(--mono);font-size:11px;color:var(--text);outline:none;}
+.bt-progress{background:var(--bg3);border-radius:8px;height:4px;overflow:hidden;margin-bottom:10px;}
+.bt-progress-fill{height:100%;background:var(--green);border-radius:8px;transition:width .2s;width:0%;}
+.bt-status{font-size:10px;color:var(--muted);margin-bottom:10px;min-height:14px;}
+.bt-sum{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px;}
+.bt-card{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px 14px;text-align:center;}
+.bt-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.bt-val{font-family:var(--display);font-size:20px;font-weight:800;}
+.bt-sub{font-size:9px;color:var(--muted);margin-top:2px;}
+.bt-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px;}
+.bt-bot-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;text-align:center;transition:border-color .2s;}
+.bt-bot-card.bt-winner{border-color:rgba(15,204,126,.5);background:rgba(15,204,126,.03);}
+.bt-bot-name{font-family:var(--display);font-size:11px;font-weight:700;margin-bottom:4px;}
+.bt-bot-wr{font-size:18px;font-weight:800;font-family:var(--display);margin-bottom:2px;}
+.bt-bot-pnl{font-size:11px;font-weight:700;margin-bottom:4px;}
+.bt-bot-sub{font-size:9px;color:var(--muted);}
+.trade-scroll{max-height:280px;overflow-y:auto;}
+.trade-scroll::-webkit-scrollbar{width:3px;}.trade-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+.trade-row{display:grid;grid-template-columns:90px 55px 60px 65px 65px 80px 65px 1fr;gap:6px;padding:5px 12px;border-bottom:1px solid rgba(255,255,255,0.025);font-size:9px;align-items:center;}
 
 /* LOG */
-.log-body{max-height:220px;overflow-y:auto;padding:8px 14px;}
+.log-body{max-height:300px;overflow-y:auto;padding:8px 14px;}
 .log-body::-webkit-scrollbar{width:3px;}.log-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 .log-line{font-size:10px;padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.02);display:flex;gap:10px;}
-.log-line .ts{color:#1e2a3a;min-width:56px;}
-.msg.ok{color:var(--green);}.msg.err{color:var(--red);}.msg.inf{color:var(--blue);}.msg.sig{color:var(--amber);}.msg.trade{color:var(--purple);}
+.log-line .ts{color:#1e2a3a;min-width:56px;}.msg.ok{color:var(--green);}.msg.err{color:var(--red);}.msg.inf{color:var(--blue);}.msg.sig{color:var(--amber);}.msg.trade{color:var(--purple);}
 
-/* SETTINGS */
-.settings-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
-.sfield{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
-.sfield label{display:block;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
-.sfield input,.sfield select{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-family:var(--mono);font-size:12px;color:var(--text);outline:none;}
-.sfield .hint{font-size:9px;color:var(--muted);margin-top:5px;line-height:1.5;}
-
-@media(max-width:900px){.main-grid{grid-template-columns:1fr;}.bot-bar{grid-template-columns:repeat(3,1fr);}.strat-mini-grid{grid-template-columns:repeat(3,1fr);}.settings-grid{grid-template-columns:1fr 1fr;}}
-@media(max-width:600px){.bot-bar{grid-template-columns:1fr 1fr;}.sp-val{font-size:40px;}}
+@media(max-width:1100px){.bots-grid{grid-template-columns:repeat(3,1fr);}.arena-stats{grid-template-columns:repeat(3,1fr);}  .bt-grid{grid-template-columns:repeat(3,1fr);}.bt-controls{grid-template-columns:1fr 1fr 1fr;}}
+@media(max-width:700px){.bots-grid{grid-template-columns:1fr 1fr;}.arena-stats{grid-template-columns:repeat(2,1fr);}.leaderboard{grid-template-columns:1fr;}.bt-grid{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<!-- HEADER -->
 <header>
-  <div class="logo">NIFTY<span>50</span> BOT <span class="tag">PAPER TRADING · 5 MIN · 15 STRATEGIES</span></div>
+  <div class="logo">NIFTY<span>50</span> BOT ARENA <span class="tag">15 INDEPENDENT BOTS · 5 MIN · PAPER TRADING</span></div>
   <div class="hdr-right">
     <span><span class="dot" id="mktDot"></span><span id="mktStatus">--</span></span>
     <span id="clockTxt">--:--:--</span>
   </div>
 </header>
 
-<!-- STATUS CARD -->
 <div class="status-card">
-  <div class="cred-info">Account: <strong>BABUBHAI REVABHAI RABARI</strong> &nbsp;|&nbsp; Client: <strong>B108482</strong> &nbsp;|&nbsp; Mode: <strong style="color:var(--amber)">PAPER TRADING (Demo Money)</strong></div>
+  <div class="cred-info">Account: <strong>BABUBHAI REVABHAI RABARI</strong> &nbsp;|&nbsp; Client: <strong>B108482</strong> &nbsp;|&nbsp; Mode: <strong style="color:var(--amber)">PAPER TRADING</strong> — Each bot has ₹10,000 demo capital</div>
   <div style="display:flex;gap:8px;align-items:center;">
     <div class="sbadge" id="connBadge">NOT LOGGED IN</div>
     <button class="btn btn-sm" id="loginBtn" onclick="doLogin()">AUTO LOGIN</button>
@@ -175,289 +174,299 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 </div>
 <div class="error-box" id="errBox"></div>
 
-<!-- BOT STATS BAR -->
-<div class="bot-bar">
-  <div class="bot-stat">
-    <div class="bot-stat-lbl">Demo Capital</div>
-    <div class="bot-stat-val bsv-blue" id="bsCapital">₹1,00,000</div>
-    <div class="bot-stat-sub">Starting balance</div>
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('arena')">🤖 BOT ARENA</div>
+  <div class="tab" onclick="switchTab('trades')">📋 TRADE FEED</div>
+  <div class="tab" onclick="switchTab('backtest')">📊 BACKTEST</div>
+  <div class="tab" onclick="switchTab('log')">🗒 LOG</div>
+</div>
+
+<!-- ══════ TAB: ARENA ══════ -->
+<div class="tab-content active" id="tab-arena">
+
+  <!-- ARENA STATS -->
+  <div class="arena-stats">
+    <div class="astat"><div class="astat-lbl">Nifty Spot</div><div class="astat-val" id="asSpot" style="color:var(--blue)">--</div><div class="astat-sub" id="asSpotChg">--</div></div>
+    <div class="astat"><div class="astat-lbl">Total Arena P&L</div><div class="astat-val" id="asTotalPnl">₹0</div><div class="astat-sub" id="asTotalSub">across all 15 bots</div></div>
+    <div class="astat"><div class="astat-lbl">Leading Bot 🥇</div><div class="astat-val" id="asLeader" style="font-size:12px;line-height:1.4">--</div><div class="astat-sub" id="asLeaderPnl">--</div></div>
+    <div class="astat"><div class="astat-lbl">Total Trades</div><div class="astat-val" id="asTrades">0</div><div class="astat-sub">all bots combined</div></div>
+    <div class="astat"><div class="astat-lbl">Next Scan</div><div class="astat-val" id="asNext" style="font-size:14px">--</div><div class="astat-sub" id="asInterval">every 5 min</div></div>
+    <div class="astat"><div class="astat-lbl">Expiry</div><div class="astat-val" id="asExpiry" style="font-size:12px;line-height:1.4">--</div><div class="astat-sub">current week</div></div>
   </div>
-  <div class="bot-stat">
-    <div class="bot-stat-lbl">Current Balance</div>
-    <div class="bot-stat-val" id="bsBalance">₹1,00,000</div>
-    <div class="bot-stat-sub" id="bsBalSub">+₹0 (0%)</div>
+
+  <!-- CONTROL ROW -->
+  <div class="ctrl-row">
+    <div class="arena-badge stopped" id="arenaBadge"><span class="bdot"></span><span id="arenaBadgeTxt">ARENA STOPPED</span></div>
+    <button class="btn" id="startBtn" onclick="startArena()" disabled>▶ START ALL 15 BOTS</button>
+    <button class="btn btn-red" id="stopBtn" onclick="stopArena()" disabled>■ STOP ALL</button>
+    <div style="flex:1"></div>
+    <span style="font-size:10px;color:var(--muted)">Candle:</span>
+    <select class="sel" id="candleSel"><option value="FIVE_MINUTE" selected>5 Min</option><option value="THREE_MINUTE">3 Min</option><option value="FIFTEEN_MINUTE">15 Min</option></select>
+    <span style="font-size:10px;color:var(--muted)">SL/TP:</span>
+    <select class="sel" id="slSel"><option value="20_40">-20% / +40%</option><option value="25_50" selected>-25% / +50%</option><option value="30_60">-30% / +60%</option></select>
+    <button class="btn btn-sm btn-ghost" onclick="runDemoScan()">DEMO SCAN</button>
+    <button class="btn btn-sm btn-ghost" onclick="resetArena()">RESET</button>
   </div>
-  <div class="bot-stat">
-    <div class="bot-stat-lbl">Today's P&L</div>
-    <div class="bot-stat-val" id="bsDayPnl">₹0</div>
-    <div class="bot-stat-sub" id="bsDaySub">0 trades today</div>
-  </div>
-  <div class="bot-stat">
-    <div class="bot-stat-lbl">Win Rate</div>
-    <div class="bot-stat-val" id="bsWinRate">--</div>
-    <div class="bot-stat-sub" id="bsWRSub">no trades yet</div>
-  </div>
-  <div class="bot-stat">
-    <div class="bot-stat-lbl">Nifty Spot</div>
-    <div class="bot-stat-val bsv-blue" id="bsSpot">--</div>
-    <div class="bot-stat-sub" id="bsSpotChg">--</div>
+
+  <!-- 15 BOT CARDS -->
+  <div class="bots-grid" id="botsGrid"><!-- filled by JS --></div>
+
+  <!-- LEADERBOARD + EQUITY -->
+  <div class="leaderboard">
+    <div class="panel">
+      <div class="panel-hdr"><div class="panel-title">Live Leaderboard</div><span id="lbUpdate" style="font-size:9px;color:var(--muted)">--</span></div>
+      <table class="lb-table">
+        <thead><tr><th>Rank</th><th>Bot</th><th>Balance</th><th>P&L</th><th>Trades</th><th>Win%</th><th>Status</th></tr></thead>
+        <tbody id="lbBody"></tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><div class="panel-title">Equity Curves — All Bots</div><span style="font-size:9px;color:var(--muted)">₹10,000 start each</span></div>
+      <div style="padding:10px 14px"><canvas id="eqCanvas" class="eq-canvas" style="height:160px"></canvas></div>
+    </div>
   </div>
 </div>
 
-<!-- CONTROL ROW -->
-<div class="ctrl-row">
-  <div class="bot-status-wrap">
-    <div class="bot-badge stopped" id="botBadge"><span class="bdot"></span><span id="botBadgeTxt">BOT STOPPED</span></div>
-  </div>
-  <button class="btn" id="startBtn" onclick="startBot()" disabled>▶ START BOT</button>
-  <button class="btn btn-red" id="stopBtn" onclick="stopBot()" disabled>■ STOP BOT</button>
-  <span class="cd-badge" id="nextScanTxt"></span>
-  <div style="flex:1"></div>
-  <span style="font-size:10px;color:var(--muted)">Candle:</span>
-  <select class="sel" id="candleIntervalSel">
-    <option value="FIVE_MINUTE" selected>5 Min</option>
-    <option value="FIFTEEN_MINUTE">15 Min</option>
-    <option value="THREE_MINUTE">3 Min</option>
-  </select>
-  <span style="font-size:10px;color:var(--muted)">Min votes:</span>
-  <select class="sel" id="minVotesSel">
-    <option value="7">7/15</option>
-    <option value="8" selected>8/15</option>
-    <option value="10">10/15</option>
-    <option value="12">12/15</option>
-  </select>
-  <button class="btn btn-sm btn-ghost" onclick="useDemoData()">DEMO DATA</button>
-  <button class="btn btn-sm btn-ghost" onclick="resetBot()">RESET</button>
-</div>
-
-<!-- MAIN GRID: Signal + Active Trade -->
-<div class="main-grid">
-
-  <!-- LEFT: Signal -->
-  <div>
-    <div class="signal-panel wait" id="signalPanel">
-      <div class="sp-candle" id="spCandle">5 MIN</div>
-      <div class="sp-time" id="spTime">--</div>
-      <div class="sp-lbl">Bot Signal — 15 Strategies Voting</div>
-      <div class="sp-val m" id="spVal">WAITING</div>
-      <div class="sp-sub" id="spSub">Start bot to begin scanning</div>
-      <div class="vote-row">
-        <div class="vote-pill vp-ce" id="vpCE">CE: 0</div>
-        <div class="vote-pill vp-wa" id="vpWA">WAIT: 15</div>
-        <div class="vote-pill vp-pe" id="vpPE">PE: 0</div>
+<!-- ══════ TAB: TRADE FEED ══════ -->
+<div class="tab-content" id="tab-trades">
+  <div class="panel">
+    <div class="panel-hdr"><div class="panel-title">Live Trade Feed — All 15 Bots</div><span style="font-size:9px;color:var(--muted)" id="feedCount">0 events</span></div>
+    <div style="overflow-x:auto">
+      <div style="display:grid;grid-template-columns:90px 55px 60px 65px 65px 80px 65px 1fr;gap:6px;padding:5px 12px;border-bottom:1px solid var(--border);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">
+        <span>Time</span><span>Bot</span><span>Action</span><span>Strike</span><span>Premium</span><span>P&L</span><span>Return%</span><span>Reason</span>
       </div>
-      <div class="conf-row">
-        <span style="font-size:10px;color:var(--muted)">Agreement</span>
-        <div class="conf-track"><div class="conf-fill" id="confFill"></div></div>
-        <span style="font-size:10px;color:var(--muted)" id="confPct">0%</span>
+      <div class="trade-scroll" id="tradeFeedBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ TAB: BACKTEST ══════ -->
+<div class="tab-content" id="tab-backtest">
+
+  <div class="bt-controls">
+    <div class="field"><label>Period</label>
+      <select id="btPeriod"><option value="30">30 days</option><option value="90">90 days</option><option value="180" selected>6 months</option><option value="365">1 year</option></select>
+    </div>
+    <div class="field"><label>Capital per bot (₹)</label><input type="number" id="btCap" value="10000" min="1000" step="1000"/></div>
+    <div class="field"><label>SL% / TP%</label>
+      <select id="btSlTp"><option value="20_40">SL -20% / TP +40%</option><option value="25_50" selected>SL -25% / TP +50%</option><option value="30_60">SL -30% / TP +60%</option></select>
+    </div>
+    <div class="field"><label>Candle interval</label>
+      <select id="btCandle"><option value="FIVE_MINUTE" selected>5 Min</option><option value="FIFTEEN_MINUTE">15 Min</option></select>
+    </div>
+    <div><button class="btn btn-blue" onclick="runBacktest()">▶ BACKTEST ALL 15</button></div>
+  </div>
+
+  <div class="bt-status" id="btStatus">Ready. Will use real Angel One historical data if logged in, else demo data.</div>
+  <div class="bt-progress"><div class="bt-progress-fill" id="btPF"></div></div>
+
+  <div class="bt-sum" id="btSum" style="display:none">
+    <div class="bt-card"><div class="bt-lbl">Best Bot</div><div class="bt-val" id="bsBot" style="font-size:12px;line-height:1.4">--</div><div class="bt-sub" id="bsBotWR">--</div></div>
+    <div class="bt-card"><div class="bt-lbl">Best Win Rate</div><div class="bt-val" id="bsWR">--</div><div class="bt-sub" id="bsWRSub">--</div></div>
+    <div class="bt-card"><div class="bt-lbl">Best P&L</div><div class="bt-val" id="bsPnl">--</div><div class="bt-sub" id="bsPnlSub">--</div></div>
+    <div class="bt-card"><div class="bt-lbl">Profitable Bots</div><div class="bt-val" id="bsProf">--</div><div class="bt-sub">positive P&L</div></div>
+    <div class="bt-card"><div class="bt-lbl">Total Trades</div><div class="bt-val" id="bsTrades">--</div><div class="bt-sub">all 15 bots</div></div>
+  </div>
+
+  <!-- BT BOT CARDS -->
+  <div class="bt-grid" id="btBotGrid" style="display:none"></div>
+
+  <!-- BT DETAIL TABLE -->
+  <div class="panel" id="btDetailPanel" style="display:none">
+    <div class="panel-hdr">
+      <div class="panel-title">Best Bot — Trade Log</div>
+      <span style="font-size:9px;color:var(--muted)" id="btDetailLbl">--</span>
+    </div>
+    <div style="overflow-x:auto">
+      <div style="display:grid;grid-template-columns:90px 55px 60px 65px 65px 80px 65px 1fr;gap:6px;padding:5px 12px;border-bottom:1px solid var(--border);font-size:9px;color:var(--muted);text-transform:uppercase">
+        <span>Entry</span><span>Type</span><span>Strike</span><span>Entry ₹</span><span>Exit ₹</span><span>P&L</span><span>Return%</span><span>Exit Reason</span>
       </div>
-    </div>
-
-    <!-- 15 Strategy Mini Cards -->
-    <div class="strat-mini-grid" id="stratMiniGrid">
-      <!-- filled by JS -->
+      <div class="trade-scroll" id="btTradeLog"></div>
     </div>
   </div>
 
-  <!-- RIGHT: Active Trade -->
-  <div class="trade-panel">
-    <div class="tp-title">Active Trade</div>
-    <div class="no-trade" id="noTradeMsg">
-      <div style="font-size:28px;margin-bottom:8px">💤</div>
-      <div>No open trade</div>
-      <div style="font-size:10px;margin-top:4px">Bot will enter when ≥8 strategies agree</div>
-    </div>
-    <div class="active-trade" id="activeTradePnl">
-      <div class="at-type" id="atType">--</div>
-      <div class="at-row"><span class="at-lbl">Strike</span><span class="at-val" id="atStrike">--</span></div>
-      <div class="at-row"><span class="at-lbl">Entry Price</span><span class="at-val" id="atEntry">--</span></div>
-      <div class="at-row"><span class="at-lbl">Current Price</span><span class="at-val" id="atCur">--</span></div>
-      <div class="at-row"><span class="at-lbl">Qty (lots)</span><span class="at-val" id="atQty">1 lot (50)</span></div>
-      <div class="at-row"><span class="at-lbl">Capital used</span><span class="at-val" id="atCapUsed">--</span></div>
-      <div class="at-row"><span class="at-lbl">Stop Loss</span><span class="at-val" id="atSL" style="color:var(--red)">--</span></div>
-      <div class="at-row"><span class="at-lbl">Target</span><span class="at-val" id="atTP" style="color:var(--green)">--</span></div>
-      <div class="at-row"><span class="at-lbl">Holding (candles)</span><span class="at-val" id="atHeld">--</span></div>
-      <div class="pnl-live" id="atPnlLive">₹0</div>
-      <div class="sl-bar-wrap">
-        <div class="sl-bar-lbl"><span id="slBarSL">SL</span><span id="slBarEntry">Entry</span><span id="slBarTP">Target</span></div>
-        <div class="sl-bar-track"><div class="sl-bar-fill" id="slBarFill" style="width:50%;background:var(--amber)"></div></div>
-      </div>
-      <button class="exit-btn" onclick="manualExit()">■ MANUAL EXIT</button>
-    </div>
+  <!-- BT EQUITY -->
+  <div class="panel" id="btEqPanel" style="display:none">
+    <div class="panel-hdr"><div class="panel-title">Equity Curves — Backtest</div><span style="font-size:9px;color:var(--muted)" id="btEqLbl">--</span></div>
+    <div style="padding:12px"><canvas id="btEqCanvas" style="width:100%;height:160px"></canvas></div>
   </div>
+
 </div>
 
-<!-- EQUITY MINI -->
-<div class="panel">
-  <div class="panel-hdr">
-    <div class="panel-title">Equity Curve (Paper)</div>
-    <span style="font-size:10px;color:var(--muted)" id="eqLabel">₹1,00,000 start</span>
-  </div>
-  <div style="padding:10px 14px"><canvas id="eqCanvas" class="eq-mini"></canvas></div>
-</div>
-
-<!-- TRADE HISTORY -->
-<div class="panel">
-  <div class="panel-hdr">
-    <div class="panel-title">Trade History</div>
-    <span style="font-size:10px;color:var(--muted)" id="histCount">0 trades</span>
-  </div>
-  <div style="overflow-x:auto">
-    <table class="hist-table">
-      <thead><tr><th>Time</th><th>Type</th><th>Strike</th><th>Entry</th><th>Exit</th><th>P&L</th><th>Return%</th><th>Votes</th><th>Exit Reason</th></tr></thead>
-    </table>
-    <div class="hist-scroll"><table class="hist-table"><tbody id="histBody"><tr><td colspan="9" style="color:var(--muted);text-align:center;padding:20px">No trades yet</td></tr></tbody></table></div>
-  </div>
-</div>
-
-<!-- LOG -->
-<div class="panel">
-  <div class="panel-hdr"><div class="panel-title">Bot Log</div><button class="btn btn-sm btn-ghost" onclick="clearLog()">Clear</button></div>
-  <div class="log-body" id="logBody">
-    <div class="log-line"><span class="ts">--:--:--</span><span class="msg inf">Paper Trading Bot ready. Click AUTO LOGIN then START BOT.</span></div>
+<!-- ══════ TAB: LOG ══════ -->
+<div class="tab-content" id="tab-log">
+  <div class="panel">
+    <div class="panel-hdr"><div class="panel-title">System Log</div><button class="btn btn-sm btn-ghost" onclick="clearLog()">Clear</button></div>
+    <div class="log-body" id="logBody">
+      <div class="log-line"><span class="ts">--:--:--</span><span class="msg inf">Arena loaded. 15 independent bots ready. Each bot has ₹10,000 demo capital.</span></div>
+    </div>
   </div>
 </div>
 
 </div><!-- /wrap -->
-
 <script>
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════
 // CREDENTIALS
-// ═══════════════════════════════════════
-const CREDS = { clientId:'B108482', apiKey:'eKb4dhov', totpSecret:'6PMKOEYFTIRJF2APBWFGKNBKDE' };
+// ═══════════════════════════════════════════════
+const CREDS={clientId:'B108482',apiKey:'eKb4dhov',totpSecret:'6PMKOEYFTIRJF2APBWFGKNBKDE'};
+let jwtToken='',isLoggedIn=false;
 
-// ═══════════════════════════════════════
-// BOT STATE
-// ═══════════════════════════════════════
-const BOT = {
-  running: false,
-  timer: null,
-  scanInterval: 5 * 60 * 1000, // 5 min
-  countdown: 0,
-  cdTimer: null,
+// ═══════════════════════════════════════════════
+// ARENA STATE
+// ═══════════════════════════════════════════════
+let arenaRunning=false,arenaTimer=null,arenaCdTimer=null;
+let cachedCandles=null;
+const SCAN_INTERVAL=5*60*1000; // 5 min
+let feedEvents=[];
 
-  // Demo money
-  startCapital: 100000,
-  balance: 100000,
-  dayPnl: 0,
-  equityCurve: [100000],
-  tradesToday: 0,
-
-  // Trade tracking
-  inTrade: null,
-  tradeHistory: [],
-  wins: 0,
-
-  // Settings
-  minVotes: 8,
-  capitalPerTrade: 10000,
-  slPct: 20,    // -20% of premium
-  tpPct: 40,    // +40% of premium
-  maxTradesPerDay: 3,
-
-  // Market data
-  lastCandles: null,
-  lastSpot: null,
-  lastSpotPrev: null,
-};
-
-let jwtToken = '', isLoggedIn = false;
-
-// ═══════════════════════════════════════
-// INDICATORS (same as engine)
-// ═══════════════════════════════════════
-const IND = {
+// ═══════════════════════════════════════════════
+// INDICATORS
+// ═══════════════════════════════════════════════
+const IND={
   ema(C,p){if(C.length<p)return null;const k=2/(p+1);let e=C.slice(0,p).reduce((a,b)=>a+b,0)/p;for(let i=p;i<C.length;i++)e=C[i]*k+e*(1-k);return e;},
   rsi(C,p=14){if(C.length<p+1)return 50;let g=0,l=0;for(let i=1;i<=p;i++){const d=C[i]-C[i-1];if(d>0)g+=d;else l-=d;}let ag=g/p,al=l/p;for(let i=p+1;i<C.length;i++){const d=C[i]-C[i-1];ag=(ag*(p-1)+Math.max(0,d))/p;al=(al*(p-1)+Math.max(0,-d))/p;}return al===0?100:100-100/(1+ag/al);},
   macd(C){const e12=IND.ema(C,12),e26=IND.ema(C,26);return(e12&&e26)?e12-e26:null;},
   atr(C,H,L,p=14){if(C.length<p+1)return null;const tr=[];for(let i=1;i<C.length;i++)tr.push(Math.max(H[i]-L[i],Math.abs(H[i]-C[i-1]),Math.abs(L[i]-C[i-1])));if(tr.length<p)return null;let a=tr.slice(0,p).reduce((s,v)=>s+v,0)/p;for(let i=p;i<tr.length;i++)a=(a*(p-1)+tr[i])/p;return a;},
   bb(C,p=20,m=2){if(C.length<p)return null;const sl=C.slice(-p),s=sl.reduce((a,b)=>a+b,0)/p,std=Math.sqrt(sl.reduce((x,v)=>x+(v-s)**2,0)/p);return{upper:s+m*std,lower:s-m*std,mid:s,std};},
   vwap(C,H,L,V){if(!C.length)return null;let n=0,d=0;for(let i=0;i<C.length;i++){const tp=(parseFloat(H[i])+parseFloat(L[i])+C[i])/3,v=parseFloat(V[i])||1;n+=tp*v;d+=v;}return n/d;},
-  orb(candles){
-    const today=new Date(candles[candles.length-1][0]);today.setHours(0,0,0,0);
-    let orbH=null,orbL=null;
-    for(const c of candles){const d=new Date(c[0]);d.setHours(0,0,0,0);if(d.getTime()===today.getTime()){const h=new Date(c[0]).getHours(),m=new Date(c[0]).getMinutes();if(h===9&&m>=15&&m<45){orbH=orbH===null?parseFloat(c[2]):Math.max(orbH,parseFloat(c[2]));orbL=orbL===null?parseFloat(c[3]):Math.min(orbL,parseFloat(c[3]));}}};return{orbH,orbL};},
-  prevDayHL(candles){
-    const today=new Date(candles[candles.length-1][0]);today.setHours(0,0,0,0);
-    let ph=null,pl=null;
-    for(let i=candles.length-1;i>=0;i--){const d=new Date(candles[i][0]);d.setHours(0,0,0,0);if(d<today){ph=parseFloat(candles[i][2]);pl=parseFloat(candles[i][3]);for(let j=i;j>=0;j--){const d2=new Date(candles[j][0]);d2.setHours(0,0,0,0);if(d2.getTime()!==d.getTime())break;ph=Math.max(ph,parseFloat(candles[j][2]));pl=Math.min(pl,parseFloat(candles[j][3]));}break;}}
-    return{ph,pl};}
+  orb(candles){const today=new Date(candles[candles.length-1][0]);today.setHours(0,0,0,0);let oH=null,oL=null;for(const c of candles){const d=new Date(c[0]);d.setHours(0,0,0,0);if(d.getTime()===today.getTime()){const h=new Date(c[0]).getHours(),m=new Date(c[0]).getMinutes();if(h===9&&m>=15&&m<45){oH=oH===null?parseFloat(c[2]):Math.max(oH,parseFloat(c[2]));oL=oL===null?parseFloat(c[3]):Math.min(oL,parseFloat(c[3]));}}};return{orbH:oH,orbL:oL};},
+  pdhl(candles){const today=new Date(candles[candles.length-1][0]);today.setHours(0,0,0,0);let ph=null,pl=null;for(let i=candles.length-1;i>=0;i--){const d=new Date(candles[i][0]);d.setHours(0,0,0,0);if(d<today){ph=parseFloat(candles[i][2]);pl=parseFloat(candles[i][3]);for(let j=i;j>=0;j--){const d2=new Date(candles[j][0]);d2.setHours(0,0,0,0);if(d2.getTime()!==d.getTime())break;ph=Math.max(ph,parseFloat(candles[j][2]));pl=Math.min(pl,parseFloat(candles[j][3]));}break;}}return{ph,pl};}
 };
 
-// ═══════════════════════════════════════
-// 15 STRATEGIES
-// ═══════════════════════════════════════
-const STRATEGIES = [
-  {name:'EMA Cross 9/21',short:'EMA×',fn(C,H,L,V,ca){const e9=IND.ema(C,9),e21=IND.ema(C,21),e9p=IND.ema(C.slice(0,-1),9),e21p=IND.ema(C.slice(0,-1),21);if(!e9||!e21)return{sig:'WAIT',reason:'--'};const gap=Math.abs(e9-e21)/e21*100;if(e9>e21&&e9p<e21p)return{sig:'BUY CE',reason:`Fresh cross +${gap.toFixed(2)}%`};if(e9<e21&&e9p>e21p)return{sig:'BUY PE',reason:`Fresh cross -${gap.toFixed(2)}%`};return{sig:e9>e21?'BUY CE':'BUY PE',reason:`Gap ${gap.toFixed(2)}%`};}},
-  {name:'RSI Reversal',short:'RSI',fn(C){const r=IND.rsi(C);if(r<25)return{sig:'BUY CE',reason:`Extreme OS ${r.toFixed(0)}`};if(r<30)return{sig:'BUY CE',reason:`Oversold ${r.toFixed(0)}`};if(r<40)return{sig:'BUY CE',reason:`Weak ${r.toFixed(0)}`};if(r>75)return{sig:'BUY PE',reason:`Extreme OB ${r.toFixed(0)}`};if(r>70)return{sig:'BUY PE',reason:`OB ${r.toFixed(0)}`};if(r>60)return{sig:'BUY PE',reason:`Strong ${r.toFixed(0)}`};return{sig:'WAIT',reason:`Neutral ${r.toFixed(0)}`};}},
-  {name:'MACD Signal',short:'MACD',fn(C){const m=IND.macd(C),mp=IND.macd(C.slice(0,-1));if(m===null)return{sig:'WAIT',reason:'--'};if(m>0&&mp<0)return{sig:'BUY CE',reason:`Zero cross +${m.toFixed(1)}`};if(m<0&&mp>0)return{sig:'BUY PE',reason:`Zero cross ${m.toFixed(1)}`};return{sig:m>0?'BUY CE':'BUY PE',reason:`MACD ${m.toFixed(1)}`};}},
-  {name:'Supertrend',short:'ST',fn(C,H,L){const atr=IND.atr(C,H,L,7);if(!atr)return{sig:'WAIT',reason:'--'};const hl2=(H[H.length-1]+L[L.length-1])/2,lb=hl2-3*atr,cl=C[C.length-1],pct=(cl-lb)/lb*100;return{sig:cl>lb?'BUY CE':'BUY PE',reason:`${pct>0?'+':''}${pct.toFixed(2)}% vs ST`};}},
-  {name:'BB Bounce',short:'BB',fn(C){const bb=IND.bb(C,20,2);if(!bb)return{sig:'WAIT',reason:'--'};const cl=C[C.length-1];if(cl<=bb.lower)return{sig:'BUY CE',reason:`At lower BB`};if(cl<bb.lower+bb.std*0.5)return{sig:'BUY CE',reason:`Near lower BB`};if(cl>=bb.upper)return{sig:'BUY PE',reason:`At upper BB`};if(cl>bb.upper-bb.std*0.5)return{sig:'BUY PE',reason:`Near upper BB`};return{sig:'WAIT',reason:`Inside BB`};}},
-  {name:'VWAP Trend',short:'VWAP',fn(C,H,L,V){const vwap=IND.vwap(C,H,L,V);if(!vwap)return{sig:'WAIT',reason:'--'};const cl=C[C.length-1],pct=(cl-vwap)/vwap*100;if(cl>vwap&&pct>0.15)return{sig:'BUY CE',reason:`+${pct.toFixed(2)}% VWAP`};if(cl<vwap&&pct<-0.15)return{sig:'BUY PE',reason:`${pct.toFixed(2)}% VWAP`};return{sig:'WAIT',reason:`Near VWAP`};}},
-  {name:'ORB Break',short:'ORB',fn(C,H,L,V,ca){const{orbH,orbL}=IND.orb(ca);if(!orbH)return{sig:'WAIT',reason:'ORB pending'};const cl=C[C.length-1];if(cl>orbH)return{sig:'BUY CE',reason:`Above ORB ${orbH.toFixed(0)}`};if(cl<orbL)return{sig:'BUY PE',reason:`Below ORB ${orbL.toFixed(0)}`};return{sig:'WAIT',reason:`Inside ORB`};}},
-  {name:'PDH/PDL',short:'PDH',fn(C,H,L,V,ca){const{ph,pl}=IND.prevDayHL(ca);if(!ph)return{sig:'WAIT',reason:'No prev day'};const cl=C[C.length-1];if(cl>ph)return{sig:'BUY CE',reason:`Above PDH ${ph.toFixed(0)}`};if(cl<pl)return{sig:'BUY PE',reason:`Below PDL ${pl.toFixed(0)}`};return{sig:'WAIT',reason:`Inside PDH/PDL`};}},
-  {name:'RSI+EMA Combo',short:'R+E',fn(C){const r=IND.rsi(C),e9=IND.ema(C,9),e21=IND.ema(C,21);let s=0;if(r<35)s+=2;else if(r<45)s+=1;else if(r>65)s-=2;else if(r>55)s-=1;if(e9&&e21){if(e9>e21)s+=2;else s-=2;}if(s>=3)return{sig:'BUY CE',reason:`Score +${s}`};if(s<=-3)return{sig:'BUY PE',reason:`Score ${s}`};return{sig:'WAIT',reason:`Score ${s}`};}},
-  {name:'Engulfing',short:'ENG',fn(C,H,L){const n=C.length;if(n<3)return{sig:'WAIT',reason:'--'};const bE=C[n-1]>H[n-2]&&C[n-2]<C[n-3],beE=C[n-1]<L[n-2]&&C[n-2]>C[n-3];if(bE)return{sig:'BUY CE',reason:'Bull engulf'};if(beE)return{sig:'BUY PE',reason:'Bear engulf'};const bN=Math.abs(C[n-1]-C[n-2]),bP=Math.abs(C[n-2]-C[n-3]);if(bN>bP*1.5&&C[n-1]>C[n-2])return{sig:'BUY CE',reason:'Strong bull candle'};if(bN>bP*1.5&&C[n-1]<C[n-2])return{sig:'BUY PE',reason:'Strong bear candle'};return{sig:'WAIT',reason:'No pattern'};}},
-  {name:'BB Squeeze',short:'SQZ',fn(C){const bb=IND.bb(C,20,2);if(!bb)return{sig:'WAIT',reason:'--'};const cl=C[C.length-1],bw=(bb.upper-bb.lower)/bb.mid*100;if(bw<1.5&&cl>bb.upper)return{sig:'BUY CE',reason:`Squeeze break up`};if(bw<1.5&&cl<bb.lower)return{sig:'BUY PE',reason:`Squeeze break dn`};if(bw<1.5)return{sig:'WAIT',reason:`Squeezing ${bw.toFixed(2)}%`};return{sig:'WAIT',reason:`BW ${bw.toFixed(2)}%`};}},
-  {name:'EMA Ribbon',short:'RBN',fn(C){const es=[8,13,21,34,55].map(p=>IND.ema(C,p));if(es.some(e=>e===null))return{sig:'WAIT',reason:'--'};const aB=es.every((e,i)=>i===0||e<es[i-1]),aBe=es.every((e,i)=>i===0||e>es[i-1]);if(aB)return{sig:'BUY CE',reason:'Full bull ribbon'};if(aBe)return{sig:'BUY PE',reason:'Full bear ribbon'};return{sig:es[0]>es[2]?'BUY CE':'BUY PE',reason:es[0]>es[2]?'Partial bull':'Partial bear'};}},
-  {name:'Volume Break',short:'VOL',fn(C,H,L,V){const n=C.length;if(n<11)return{sig:'WAIT',reason:'--'};const avg=V.slice(-11,-1).reduce((a,b)=>a+parseFloat(b),0)/10,cur=parseFloat(V[n-1]),r=cur/(avg||1);const hi=Math.max(...H.slice(-11,-1)),lo=Math.min(...L.slice(-11,-1)),cl=C[n-1];if(cl>hi&&r>1.5)return{sig:'BUY CE',reason:`High break ${r.toFixed(1)}x vol`};if(cl<lo&&r>1.5)return{sig:'BUY PE',reason:`Low break ${r.toFixed(1)}x vol`};if(cl>hi)return{sig:'BUY CE',reason:`High break low vol`};if(cl<lo)return{sig:'BUY PE',reason:'Low break low vol'};return{sig:'WAIT',reason:`Vol ${r.toFixed(1)}x`};}},
-  {name:'ATR Breakout',short:'ATR',fn(C,H,L){const atr=IND.atr(C,H,L,14);if(!atr)return{sig:'WAIT',reason:'--'};const cl=C[C.length-1],pv=C[C.length-2],mv=Math.abs(cl-pv),r=mv/atr;if(r>1.5&&cl>pv)return{sig:'BUY CE',reason:`ATR ${r.toFixed(1)}x up`};if(r>1.5&&cl<pv)return{sig:'BUY PE',reason:`ATR ${r.toFixed(1)}x dn`};return{sig:cl>pv?'BUY CE':'BUY PE',reason:`${r.toFixed(2)}x ATR`};}},
-  {name:'HH/LL Trend',short:'HH',fn(C,H,L){const n=C.length;if(n<7)return{sig:'WAIT',reason:'--'};const HH=H[n-1]>H[n-3]&&H[n-3]>H[n-5],HL=L[n-1]>L[n-3]&&L[n-3]>L[n-5],LH=H[n-1]<H[n-3]&&H[n-3]<H[n-5],LL=L[n-1]<L[n-3]&&L[n-3]<L[n-5];if(HH&&HL)return{sig:'BUY CE',reason:'HH+HL uptrend'};if(LH&&LL)return{sig:'BUY PE',reason:'LH+LL downtrend'};if(HH||HL)return{sig:'BUY CE',reason:'Partial bull'};if(LH||LL)return{sig:'BUY PE',reason:'Partial bear'};return{sig:'WAIT',reason:'Sideways'};}}
+// ═══════════════════════════════════════════════
+// BLACK-SCHOLES OPTION PRICING
+// ═══════════════════════════════════════════════
+function normalCDF(x){const t=1/(1+0.2316419*Math.abs(x));const poly=t*(0.319381530+t*(-0.356563782+t*(1.781477937+t*(-1.821255978+t*1.330274429))));const result=1-Math.exp(-x*x/2)/Math.sqrt(2*Math.PI)*poly;return x>=0?result:1-result;}
+
+function blackScholes(spot, strike, timeYears, riskFree, vol, type){
+  if(timeYears<=0)return Math.max(0,type==='CE'?spot-strike:strike-spot);
+  const d1=(Math.log(spot/strike)+(riskFree+vol*vol/2)*timeYears)/(vol*Math.sqrt(timeYears));
+  const d2=d1-vol*Math.sqrt(timeYears);
+  if(type==='CE')return spot*normalCDF(d1)-strike*Math.exp(-riskFree*timeYears)*normalCDF(d2);
+  return strike*Math.exp(-riskFree*timeYears)*normalCDF(-d2)-spot*normalCDF(-d1);
+}
+
+function getOptionPrice(spot, strike, type, daysToExpiry=4, impliedVolPct=16){
+  const vol=impliedVolPct/100;
+  const timeYears=Math.max(0.001,daysToExpiry/365);
+  const riskFree=0.065;
+  const price=blackScholes(spot,strike,timeYears,riskFree,vol,type);
+  return Math.max(0.5,Math.round(price*20)/20); // round to nearest 0.05
+}
+
+function getATMStrike(spot){return Math.round(spot/50)*50;}
+function getDaysToExpiry(){
+  const now=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
+  const day=now.getDay();
+  const daysToThur=(4-day+7)%7||7;
+  return Math.max(1,daysToThur);
+}
+function getExpiryStr(){
+  const now=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
+  const exp=new Date(now);exp.setDate(now.getDate()+getDaysToExpiry());
+  return exp.toLocaleDateString('en-IN',{day:'2-digit',month:'short',timeZone:'Asia/Kolkata'});
+}
+
+// ═══════════════════════════════════════════════
+// 15 STRATEGY BOTS — each independent
+// ═══════════════════════════════════════════════
+const BOT_DEFS=[
+  {id:0,name:'EMA Cross',type:'TREND',
+   signal(C,H,L,V,ca){const e9=IND.ema(C,9),e21=IND.ema(C,21),e9p=IND.ema(C.slice(0,-1),9),e21p=IND.ema(C.slice(0,-1),21);if(!e9||!e21)return'WAIT';if(e9>e21&&e9p<e21p)return'BUY CE';if(e9<e21&&e9p>e21p)return'BUY PE';if(e9>e21)return'BUY CE';if(e9<e21)return'BUY PE';return'WAIT';},
+   reason(C,H,L,V,ca){const e9=IND.ema(C,9),e21=IND.ema(C,21);return e9&&e21?`EMA9:${e9.toFixed(0)} vs EMA21:${e21.toFixed(0)}`:'--';}},
+
+  {id:1,name:'RSI Reversal',type:'REVERSAL',
+   signal(C){const r=IND.rsi(C);if(r<30)return'BUY CE';if(r>70)return'BUY PE';if(r<40)return'BUY CE';if(r>60)return'BUY PE';return'WAIT';},
+   reason(C){return`RSI: ${IND.rsi(C).toFixed(1)}`;}},
+
+  {id:2,name:'MACD',type:'TREND',
+   signal(C){const m=IND.macd(C),mp=IND.macd(C.slice(0,-1));if(m===null)return'WAIT';if(m>0&&mp<0)return'BUY CE';if(m<0&&mp>0)return'BUY PE';if(m>0)return'BUY CE';if(m<0)return'BUY PE';return'WAIT';},
+   reason(C){const m=IND.macd(C);return m!==null?`MACD: ${m.toFixed(1)}`:'--';}},
+
+  {id:3,name:'Supertrend',type:'TREND',
+   signal(C,H,L){const atr=IND.atr(C,H,L,7);if(!atr)return'WAIT';const lb=(H[H.length-1]+L[L.length-1])/2-3*atr;return C[C.length-1]>lb?'BUY CE':'BUY PE';},
+   reason(C,H,L){const atr=IND.atr(C,H,L,7);return atr?`ATR: ${atr.toFixed(1)}`:'--';}},
+
+  {id:4,name:'BB Bounce',type:'REVERSAL',
+   signal(C){const bb=IND.bb(C);if(!bb)return'WAIT';const cl=C[C.length-1];if(cl<=bb.lower)return'BUY CE';if(cl>=bb.upper)return'BUY PE';if(cl<bb.lower+bb.std*0.5)return'BUY CE';if(cl>bb.upper-bb.std*0.5)return'BUY PE';return'WAIT';},
+   reason(C){const bb=IND.bb(C);return bb?`BB: ${bb.lower.toFixed(0)}-${bb.upper.toFixed(0)}`:'--';}},
+
+  {id:5,name:'VWAP',type:'TREND',
+   signal(C,H,L,V){const v=IND.vwap(C,H,L,V);if(!v)return'WAIT';const cl=C[C.length-1],p=(cl-v)/v*100;if(cl>v&&p>0.15)return'BUY CE';if(cl<v&&p<-0.15)return'BUY PE';return'WAIT';},
+   reason(C,H,L,V){const v=IND.vwap(C,H,L,V);const cl=C[C.length-1];return v?`${((cl-v)/v*100).toFixed(2)}% vs VWAP ${v.toFixed(0)}`:'--';}},
+
+  {id:6,name:'ORB Break',type:'BREAKOUT',
+   signal(C,H,L,V,ca){const{orbH,orbL}=IND.orb(ca);if(!orbH)return'WAIT';const cl=C[C.length-1];if(cl>orbH)return'BUY CE';if(cl<orbL)return'BUY PE';return'WAIT';},
+   reason(C,H,L,V,ca){const{orbH,orbL}=IND.orb(ca);return orbH?`ORB: ${orbL?.toFixed(0)}-${orbH?.toFixed(0)}`:'ORB pending';}},
+
+  {id:7,name:'PDH/PDL',type:'BREAKOUT',
+   signal(C,H,L,V,ca){const{ph,pl}=IND.pdhl(ca);if(!ph)return'WAIT';const cl=C[C.length-1];if(cl>ph)return'BUY CE';if(cl<pl)return'BUY PE';return'WAIT';},
+   reason(C,H,L,V,ca){const{ph,pl}=IND.pdhl(ca);return ph?`PDH:${ph?.toFixed(0)} PDL:${pl?.toFixed(0)}`:'No prev day';}},
+
+  {id:8,name:'RSI+EMA',type:'COMBO',
+   signal(C){const r=IND.rsi(C),e9=IND.ema(C,9),e21=IND.ema(C,21);let s=0;if(r<35)s+=2;else if(r<45)s+=1;else if(r>65)s-=2;else if(r>55)s-=1;if(e9&&e21){if(e9>e21)s+=2;else s-=2;}return s>=3?'BUY CE':s<=-3?'BUY PE':'WAIT';},
+   reason(C){const r=IND.rsi(C),e9=IND.ema(C,9),e21=IND.ema(C,21);return `RSI:${r.toFixed(0)} EMA:${e9&&e21?(e9>e21?'bull':'bear'):'--'}`;}},
+
+  {id:9,name:'Engulfing',type:'PA',
+   signal(C,H,L){const n=C.length;if(n<3)return'WAIT';if(C[n-1]>H[n-2]&&C[n-2]<C[n-3])return'BUY CE';if(C[n-1]<L[n-2]&&C[n-2]>C[n-3])return'BUY PE';const bN=Math.abs(C[n-1]-C[n-2]),bP=Math.abs(C[n-2]-C[n-3]);if(bN>bP*1.5&&C[n-1]>C[n-2])return'BUY CE';if(bN>bP*1.5&&C[n-1]<C[n-2])return'BUY PE';return'WAIT';},
+   reason(C,H,L){const n=C.length;if(n<3)return'--';const bN=Math.abs(C[n-1]-C[n-2]),bP=Math.abs(C[n-2]-C[n-3]);return`Body ratio: ${(bN/Math.max(bP,1)).toFixed(1)}x`;}},
+
+  {id:10,name:'BB Squeeze',type:'VOLATILITY',
+   signal(C){const bb=IND.bb(C);if(!bb)return'WAIT';const cl=C[C.length-1],bw=(bb.upper-bb.lower)/bb.mid*100;if(bw<1.5&&cl>bb.upper)return'BUY CE';if(bw<1.5&&cl<bb.lower)return'BUY PE';return'WAIT';},
+   reason(C){const bb=IND.bb(C);return bb?`BW: ${((bb.upper-bb.lower)/bb.mid*100).toFixed(2)}%`:'--';}},
+
+  {id:11,name:'EMA Ribbon',type:'TREND',
+   signal(C){const es=[8,13,21,34,55].map(p=>IND.ema(C,p));if(es.some(e=>e===null))return'WAIT';if(es.every((e,i)=>i===0||e<es[i-1]))return'BUY CE';if(es.every((e,i)=>i===0||e>es[i-1]))return'BUY PE';return es[0]>es[2]?'BUY CE':'BUY PE';},
+   reason(C){const es=[8,13,21].map(p=>IND.ema(C,p));return es[0]&&es[2]?`8:${es[0]?.toFixed(0)} 21:${es[2]?.toFixed(0)}`:'--';}},
+
+  {id:12,name:'Vol Break',type:'BREAKOUT',
+   signal(C,H,L,V){const n=C.length;if(n<11)return'WAIT';const avg=V.slice(-11,-1).reduce((a,b)=>a+parseFloat(b),0)/10,cur=parseFloat(V[n-1]),r=cur/(avg||1),hi=Math.max(...H.slice(-11,-1)),lo=Math.min(...L.slice(-11,-1)),cl=C[n-1];if(cl>hi&&r>1.5)return'BUY CE';if(cl<lo&&r>1.5)return'BUY PE';return'WAIT';},
+   reason(C,H,L,V){const n=V.length;if(n<6)return'--';const avg=V.slice(-6,-1).reduce((a,b)=>a+parseFloat(b),0)/5,cur=parseFloat(V[n-1]);return`Vol: ${(cur/(avg||1)).toFixed(1)}x avg`;}},
+
+  {id:13,name:'ATR Break',type:'VOLATILITY',
+   signal(C,H,L){const atr=IND.atr(C,H,L,14);if(!atr)return'WAIT';const cl=C[C.length-1],pv=C[C.length-2],mv=Math.abs(cl-pv),r=mv/atr;if(r>1.5&&cl>pv)return'BUY CE';if(r>1.5&&cl<pv)return'BUY PE';return cl>pv?'BUY CE':'BUY PE';},
+   reason(C,H,L){const atr=IND.atr(C,H,L,14),cl=C[C.length-1],pv=C[C.length-2];return atr?`${(Math.abs(cl-pv)/atr).toFixed(2)}x ATR (${atr.toFixed(0)})`:'--';}},
+
+  {id:14,name:'HH/LL',type:'TREND',
+   signal(C,H,L){const n=C.length;if(n<7)return'WAIT';const HH=H[n-1]>H[n-3]&&H[n-3]>H[n-5],HL=L[n-1]>L[n-3]&&L[n-3]>L[n-5],LH=H[n-1]<H[n-3]&&H[n-3]<H[n-5],LL=L[n-1]<L[n-3]&&L[n-3]<L[n-5];if(HH&&HL)return'BUY CE';if(LH&&LL)return'BUY PE';if(HH||HL)return'BUY CE';if(LH||LL)return'BUY PE';return'WAIT';},
+   reason(C,H,L){const n=C.length;if(n<7)return'--';return`H: ${H[n-1].toFixed(0)} L: ${L[n-1].toFixed(0)}`;}},
 ];
 
-// ═══════════════════════════════════════
-// INIT MINI STRATEGY CARDS
-// ═══════════════════════════════════════
-function initStratGrid(){
-  const grid=document.getElementById('stratMiniGrid');
-  grid.innerHTML='';
-  STRATEGIES.forEach((s,i)=>{
-    const div=document.createElement('div');
-    div.className='smc';div.id=`smc${i}`;
-    div.innerHTML=`<div class="smc-name">${i+1}. ${s.name}</div><div class="smc-sig a" id="smcsig${i}">--</div>`;
-    grid.appendChild(div);
-  });
-}
-initStratGrid();
+// ═══════════════════════════════════════════════
+// BOT INSTANCES
+// ═══════════════════════════════════════════════
+const BOTS=BOT_DEFS.map(d=>({
+  ...d,
+  balance:10000, startBalance:10000,
+  pnl:0, trades:0, wins:0,
+  inTrade:null, equityCurve:[10000],
+  lastSig:'WAIT', lastReason:'--',
+  todayTrades:0, maxDailyTrades:3
+}));
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════
 // TOTP + CLOCK
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════
 function b32d(s){const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';s=s.replace(/=+$/,'').toUpperCase();let b=0,v=0;const o=[];for(let i=0;i<s.length;i++){v=(v<<5)|a.indexOf(s[i]);b+=5;if(b>=8){o.push((v>>>(b-8))&0xff);b-=8;}}return new Uint8Array(o);}
 async function genTOTP(sec){const kb=b32d(sec);let c=Math.floor(Date.now()/30000);const m=new Uint8Array(8);for(let i=7;i>=0;i--){m[i]=c&0xff;c=Math.floor(c/256);}const ck=await crypto.subtle.importKey('raw',kb,{name:'HMAC',hash:'SHA-1'},false,['sign']);const sg=await crypto.subtle.sign('HMAC',ck,m);const h=new Uint8Array(sg),off=h[19]&0xf;const code=((h[off]&0x7f)<<24)|(h[off+1]<<16)|(h[off+2]<<8)|h[off+3];return String(code%1000000).padStart(6,'0');}
-
-function updateClock(){
-  const ist=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
-  document.getElementById('clockTxt').textContent=ist.toLocaleTimeString('en-IN',{hour12:false});
-  const h=ist.getHours(),m=ist.getMinutes();
-  const open=(h>9||(h===9&&m>=15))&&(h<15||(h===15&&m<=30));
-  document.getElementById('mktDot').className='dot'+(open?'':' closed');
-  document.getElementById('mktStatus').textContent=open?'Market Open':'Market Closed';
-}
+function updateClock(){const ist=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));document.getElementById('clockTxt').textContent=ist.toLocaleTimeString('en-IN',{hour12:false});const h=ist.getHours(),m=ist.getMinutes();const open=(h>9||(h===9&&m>=15))&&(h<15||(h===15&&m<=30));document.getElementById('mktDot').className='dot'+(open?'':' closed');document.getElementById('mktStatus').textContent=open?'Market Open':'Market Closed';}
 setInterval(updateClock,1000);updateClock();
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════
 // HELPERS
-// ═══════════════════════════════════════
-function addLog(msg,type='inf'){
-  const ist=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
-  const ts=ist.toLocaleTimeString('en-IN',{hour12:false});
-  const lb=document.getElementById('logBody');
-  const d=document.createElement('div');d.className='log-line';
-  d.innerHTML=`<span class="ts">${ts}</span><span class="msg ${type}">${msg}</span>`;
-  lb.prepend(d);while(lb.children.length>300)lb.removeChild(lb.lastChild);
-}
+// ═══════════════════════════════════════════════
+function addLog(msg,type='inf'){const ist=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));const ts=ist.toLocaleTimeString('en-IN',{hour12:false});const lb=document.getElementById('logBody');const d=document.createElement('div');d.className='log-line';d.innerHTML=`<span class="ts">${ts}</span><span class="msg ${type}">${msg}</span>`;lb.prepend(d);while(lb.children.length>400)lb.removeChild(lb.lastChild);}
 function clearLog(){document.getElementById('logBody').innerHTML='';}
 function showError(m){const b=document.getElementById('errBox');b.textContent='⚠ '+m;b.style.display='block';}
 function hideError(){document.getElementById('errBox').style.display='none';}
-function fmt(n){return n.toLocaleString('en-IN',{minimumFractionDigits:0,maximumFractionDigits:0});}
+function fmtRs(n){return '₹'+Math.abs(n).toLocaleString('en-IN',{minimumFractionDigits:0,maximumFractionDigits:0});}
+function switchTab(name){const names=['arena','trades','backtest','log'];document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',names[i]===name));document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-'+name).classList.add('active');}
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════
 // LOGIN
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════
 async function doLogin(){
   const btn=document.getElementById('loginBtn');btn.disabled=true;btn.textContent='Logging in...';
-  addLog('Generating TOTP...','inf');
   let totp;try{totp=await genTOTP(CREDS.totpSecret);}catch(e){showError('TOTP: '+e.message);btn.disabled=false;btn.textContent='AUTO LOGIN';return;}
   addLog('TOTP: '+totp,'ok');
   try{
@@ -469,378 +478,361 @@ async function doLogin(){
     else throw new Error(data.message||'Failed');
   }catch(e){addLog('Login error: '+e.message,'err');showPwdPrompt();btn.disabled=false;btn.textContent='AUTO LOGIN';}
 }
-function onLoginOk(token){
-  jwtToken=token;isLoggedIn=true;
-  document.getElementById('connBadge').textContent='LOGGED IN ✓';document.getElementById('connBadge').className='sbadge ok';
-  document.getElementById('loginBtn').textContent='✓ LOGGED IN';document.getElementById('loginBtn').disabled=true;
-  document.getElementById('startBtn').disabled=false;
-  addLog('Login successful','ok');hideError();
-}
-function showPwdPrompt(){
-  if(document.getElementById('pwdPr'))return;
-  const div=document.createElement('div');div.id='pwdPr';
-  div.style.cssText='background:rgba(51,181,245,0.07);border:1px solid rgba(51,181,245,0.2);border-radius:10px;padding:14px 16px;font-size:11px;color:var(--blue);margin-bottom:14px;';
-  div.innerHTML=`<strong>Enter Angel One trading password/PIN:</strong><div style="display:flex;gap:8px;margin-top:8px"><input type="password" id="pwdIn" placeholder="Password / 4-digit PIN" style="flex:1;background:#07080b;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:7px 10px;font-family:var(--mono);font-size:11px;color:var(--text);outline:none;"><button class="btn btn-sm btn-amber" style="background:var(--amber);color:#000" onclick="loginPwd()">LOGIN</button></div>`;
-  document.getElementById('errBox').after(div);
-}
-async function loginPwd(){
-  const pwd=document.getElementById('pwdIn')?.value?.trim();if(!pwd)return;
-  const btn=document.querySelector('#pwdPr .btn');btn.disabled=true;btn.textContent='...';
-  let totp;try{totp=await genTOTP(CREDS.totpSecret);}catch(e){btn.disabled=false;btn.textContent='LOGIN';return;}
-  try{
-    const res=await fetch('https://apiconnect.angelbroking.com/rest/auth/angelbroking/user/v1/loginByPassword',{method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json','X-UserType':'USER','X-SourceID':'WEB','X-ClientLocalIP':'127.0.0.1','X-ClientPublicIP':'127.0.0.1','X-MACAddress':'00:00:00:00:00:00','X-PrivateKey':CREDS.apiKey},
-      body:JSON.stringify({clientcode:CREDS.clientId,password:pwd,totp})});
-    const data=await res.json();
-    if(data.status&&data.data?.jwtToken)onLoginOk(data.data.jwtToken);
-    else throw new Error(data.message);
-  }catch(e){showError('Login failed: '+e.message);btn.disabled=false;btn.textContent='LOGIN';}
-}
+function onLoginOk(token){jwtToken=token;isLoggedIn=true;document.getElementById('connBadge').textContent='LOGGED IN ✓';document.getElementById('connBadge').className='sbadge ok';document.getElementById('loginBtn').textContent='✓ LOGGED IN';document.getElementById('loginBtn').disabled=true;document.getElementById('startBtn').disabled=false;addLog('Login OK','ok');hideError();}
+function showPwdPrompt(){if(document.getElementById('pwdPr'))return;const div=document.createElement('div');div.id='pwdPr';div.style.cssText='background:rgba(51,181,245,0.07);border:1px solid rgba(51,181,245,0.2);border-radius:10px;padding:12px 14px;font-size:11px;color:var(--blue);margin-bottom:12px;';div.innerHTML=`<strong>Enter Angel One trading password/PIN:</strong><div style="display:flex;gap:8px;margin-top:8px"><input type="password" id="pwdIn" placeholder="Password/PIN" style="flex:1;background:#07080b;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:7px 10px;font-family:var(--mono);font-size:11px;color:var(--text);outline:none;"><button class="btn btn-sm btn-amber" onclick="loginPwd()">LOGIN</button></div>`;document.getElementById('errBox').after(div);}
+async function loginPwd(){const pwd=document.getElementById('pwdIn')?.value?.trim();if(!pwd)return;const btn=document.querySelector('#pwdPr .btn');btn.disabled=true;btn.textContent='...';let totp;try{totp=await genTOTP(CREDS.totpSecret);}catch(e){btn.disabled=false;btn.textContent='LOGIN';return;}try{const res=await fetch('https://apiconnect.angelbroking.com/rest/auth/angelbroking/user/v1/loginByPassword',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json','X-UserType':'USER','X-SourceID':'WEB','X-ClientLocalIP':'127.0.0.1','X-ClientPublicIP':'127.0.0.1','X-MACAddress':'00:00:00:00:00:00','X-PrivateKey':CREDS.apiKey},body:JSON.stringify({clientcode:CREDS.clientId,password:pwd,totp})});const data=await res.json();if(data.status&&data.data?.jwtToken)onLoginOk(data.data.jwtToken);else throw new Error(data.message);}catch(e){showError('Login failed: '+e.message);btn.disabled=false;btn.textContent='LOGIN';}}
 
-// ═══════════════════════════════════════
-// FETCH CANDLES (5 MIN)
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════
+// FETCH CANDLES
+// ═══════════════════════════════════════════════
 async function fetchCandles(days=3){
   const now=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
   const from=new Date(now);from.setDate(from.getDate()-days);
-  const fmt2=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-  const interval=document.getElementById('candleIntervalSel').value;
+  const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  const interval=document.getElementById('candleSel').value;
   const res=await fetch('https://apiconnect.angelbroking.com/rest/secure/angelbroking/historical/v1/getCandleData',{method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+jwtToken,'X-UserType':'USER','X-SourceID':'WEB','X-ClientLocalIP':'127.0.0.1','X-ClientPublicIP':'127.0.0.1','X-MACAddress':'00:00:00:00:00:00','X-PrivateKey':CREDS.apiKey},
-    body:JSON.stringify({exchange:'NSE',symboltoken:'99926000',interval,fromdate:fmt2(from),todate:fmt2(now)})});
+    body:JSON.stringify({exchange:'NSE',symboltoken:'99926000',interval,fromdate:fmt(from),todate:fmt(now)})});
   if(!res.ok)throw new Error('HTTP '+res.status);
   const d=await res.json();if(!d.status)throw new Error(d.message||'API error');
   return d.data||[];
 }
 
-// ═══════════════════════════════════════
-// OPTIONS PRICING (simulated — ATM approx)
-// ═══════════════════════════════════════
-function getOptionPrice(spot, type, strike){
-  // Approximate premium: intrinsic + time value
-  const intrinsic = type==='CE' ? Math.max(0, spot-strike) : Math.max(0, strike-spot);
-  const timeVal = Math.max(20, spot * 0.003); // ~0.3% time value
-  return intrinsic + timeVal;
-}
-
-function getNearestStrike(spot){
-  return Math.round(spot/50)*50;
-}
-
-function getNearestExpiry(){
-  const now=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
-  const day=now.getDay();
-  const daysToThur=(4-day+7)%7||7;
-  const exp=new Date(now);exp.setDate(now.getDate()+daysToThur);
-  return exp.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Kolkata'});
-}
-
-// ═══════════════════════════════════════
-// BOT CORE — SCAN & TRADE
-// ═══════════════════════════════════════
-async function botScan(){
-  if(!BOT.running) return;
-  addLog('Scanning market...','inf');
+// ═══════════════════════════════════════════════
+// ARENA SCAN — runs all 15 bots
+// ═══════════════════════════════════════════════
+async function arenaScan(){
+  if(!arenaRunning)return;
+  addLog('Arena scan starting...','inf');
 
   let candles;
-  if(isLoggedIn){
-    try{ candles=await fetchCandles(3); }
-    catch(e){ addLog('Fetch error: '+e.message+' — using demo','err'); candles=genDemoCandles(3); }
-  } else {
-    candles=genDemoCandles(3);
-  }
+  if(isLoggedIn){try{candles=await fetchCandles(3);}catch(e){addLog('API error: '+e.message+' — using demo','err');candles=genDemo(3);}}
+  else candles=genDemo(3);
 
-  if(!candles||candles.length<30){ addLog('Not enough candles','err'); return; }
+  if(!candles||candles.length<30){addLog('Not enough candles','err');return;}
+  cachedCandles=candles;
 
-  BOT.lastCandles=candles;
   const C=candles.map(c=>parseFloat(c[4]));
   const H=candles.map(c=>parseFloat(c[2]));
   const L=candles.map(c=>parseFloat(c[3]));
   const V=candles.map(c=>c[5]);
   const spot=C[C.length-1];
-  const prevSpot=BOT.lastSpot||C[C.length-2]||spot;
-  BOT.lastSpotPrev=prevSpot;BOT.lastSpot=spot;
+  const prevSpot=C[C.length-2]||spot;
+  const dte=getDaysToExpiry();
 
-  // Update spot display
-  const spotChg=spot-prevSpot,spotChgPct=(spotChg/prevSpot*100);
-  document.getElementById('bsSpot').textContent=spot.toFixed(2);
-  const sc=document.getElementById('bsSpotChg');
-  sc.textContent=`${spotChg>=0?'▲':'▼'} ${Math.abs(spotChg).toFixed(2)} (${Math.abs(spotChgPct).toFixed(2)}%)`;
-  sc.style.color=spotChg>=0?'var(--green)':'var(--red)';
+  // Update spot
+  document.getElementById('asSpot').textContent=spot.toFixed(2);
+  const sc=document.getElementById('asSpotChg');
+  const sd=spot-prevSpot,sp=(sd/prevSpot*100);
+  sc.textContent=`${sd>=0?'▲':'▼'} ${Math.abs(sd).toFixed(2)} (${Math.abs(sp).toFixed(2)}%)`;
+  sc.style.color=sd>=0?'var(--green)':'var(--red)';
+  document.getElementById('asExpiry').textContent=getExpiryStr();
 
-  // Run all 15 strategies
-  let ceVotes=0,peVotes=0,waitVotes=0;
-  const results=[];
-  STRATEGIES.forEach((s,i)=>{
-    let r={sig:'WAIT',reason:'--'};
-    try{r=s.fn(C,H,L,V,candles)||r;}catch(e){r.reason='Err';}
-    r.sig=r.sig||'WAIT';
-    results.push(r);
-    if(r.sig==='BUY CE')ceVotes++;
-    else if(r.sig==='BUY PE')peVotes++;
-    else waitVotes++;
+  // Run each bot independently
+  const slTp=document.getElementById('slSel').value.split('_');
+  const slPct=parseInt(slTp[0]),tpPct=parseInt(slTp[1]);
 
-    // Update mini card
-    const card=document.getElementById(`smc${i}`);
-    const sigEl=document.getElementById(`smcsig${i}`);
-    if(card&&sigEl){
-      card.className=`smc ${r.sig==='BUY CE'?'ce':r.sig==='BUY PE'?'pe':''}`;
-      sigEl.className=`smc-sig ${r.sig==='BUY CE'?'g':r.sig==='BUY PE'?'r':'a'}`;
-      sigEl.textContent=r.sig==='BUY CE'?'CE ↑':r.sig==='BUY PE'?'PE ↓':'WAIT';
-      sigEl.title=r.reason;
+  BOTS.forEach(bot=>{
+    // Get signal
+    let sig='WAIT',reason='--';
+    try{sig=bot.signal(C,H,L,V,candles)||'WAIT';}catch(e){sig='WAIT';}
+    try{reason=bot.reason(C,H,L,V,candles)||'--';}catch(e){}
+    bot.lastSig=sig;bot.lastReason=reason;
+
+    const strike=getATMStrike(spot);
+
+    // ── EXIT EXISTING TRADE ──
+    if(bot.inTrade){
+      const t=bot.inTrade;
+      const curOptPrice=getOptionPrice(spot,t.strike,t.type,dte);
+      const pnlPct=(curOptPrice-t.entryPrice)/t.entryPrice*100;
+      const pnl=(pnlPct/100)*t.capitalUsed;
+      t.curPrice=curOptPrice;t.pnlPct=pnlPct;t.pnl=pnl;t.heldCandles++;
+
+      let exitReason=null;
+      if(pnlPct<=-slPct)exitReason=`SL -${slPct}%`;
+      else if(pnlPct>=tpPct)exitReason=`Target +${tpPct}%`;
+      else if(t.heldCandles>=12)exitReason='Time exit';
+      else if(sig!=='WAIT'&&sig!==`BUY ${t.type}`)exitReason='Reverse signal';
+
+      if(exitReason){
+        const finalPnl=(pnlPct/100)*t.capitalUsed;
+        bot.balance+=finalPnl;bot.pnl+=finalPnl;bot.trades++;
+        if(finalPnl>0)bot.wins++;
+        bot.equityCurve.push(bot.balance);
+        const ist=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
+        const ts=ist.toLocaleTimeString('en-IN',{hour12:false});
+        addLog(`[${bot.name}] EXIT ${t.type} ${t.strike} | Premium ${t.entryPrice.toFixed(0)}→${curOptPrice.toFixed(0)} | ${finalPnl>=0?'+':''}₹${finalPnl.toFixed(0)} (${pnlPct.toFixed(1)}%) | ${exitReason}`,'trade');
+        addFeedEvent(ts,bot.name,'EXIT',t.strike,t.type,t.entryPrice,curOptPrice,finalPnl,pnlPct,exitReason);
+        bot.inTrade=null;
+      }
+    }
+
+    // ── ENTER NEW TRADE ──
+    if(!bot.inTrade&&sig!=='WAIT'){
+      const ist2=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
+      const h2=ist2.getHours(),m2=ist2.getMinutes();
+      const canEnter=(h2>9||(h2===9&&m2>=15))&&(h2<14||(h2===14&&m2<30));
+      if(canEnter&&bot.todayTrades<bot.maxDailyTrades){
+        const type=sig==='BUY CE'?'CE':'PE';
+        const optPrice=getOptionPrice(spot,strike,type,dte);
+        const capitalUsed=Math.min(bot.balance,10000);
+        if(capitalUsed>=optPrice*50*0.5){
+          bot.inTrade={type,strike,entrySpot:spot,entryPrice:optPrice,curPrice:optPrice,capitalUsed,heldCandles:0,pnl:0,pnlPct:0,slPrice:optPrice*(1-slPct/100),tpPrice:optPrice*(1+tpPct/100)};
+          bot.todayTrades++;
+          const ts2=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'})).toLocaleTimeString('en-IN',{hour12:false});
+          addLog(`[${bot.name}] ENTER ${type} ${strike} | Premium ₹${optPrice.toFixed(0)} | ${reason}`,'sig');
+          addFeedEvent(ts2,bot.name,'ENTER',strike,type,optPrice,null,null,null,reason);
+        }
+      }
     }
   });
 
-  // Determine master signal
-  const minVotes=parseInt(document.getElementById('minVotesSel').value)||8;
-  let masterSig='WAIT', masterConf=0, sigReason='';
-  if(ceVotes>=minVotes){masterSig='BUY CE';masterConf=Math.round(ceVotes/15*100);sigReason=`${ceVotes}/15 CE`;}
-  else if(peVotes>=minVotes){masterSig='BUY PE';masterConf=Math.round(peVotes/15*100);sigReason=`${peVotes}/15 PE`;}
-  else{masterSig='WAIT';masterConf=Math.round(Math.max(ceVotes,peVotes,waitVotes)/15*100);sigReason=`CE:${ceVotes} PE:${peVotes} WAIT:${waitVotes} — need ${minVotes}`;}
-
-  // Update signal panel
-  const panel=document.getElementById('signalPanel');
-  const val=document.getElementById('spVal');
-  panel.className=`signal-panel ${masterSig==='BUY CE'?'ce':masterSig==='BUY PE'?'pe':'wait'}`;
-  if(BOT.inTrade)panel.classList.add('trade-active');
-  val.className=`sp-val ${masterSig==='BUY CE'?'g':masterSig==='BUY PE'?'r':'a'}`;
-  val.textContent=masterSig;
-  document.getElementById('spSub').textContent=sigReason;
-  document.getElementById('vpCE').textContent=`CE: ${ceVotes}`;
-  document.getElementById('vpPE').textContent=`PE: ${peVotes}`;
-  document.getElementById('vpWA').textContent=`WAIT: ${waitVotes}`;
-  document.getElementById('confFill').style.width=masterConf+'%';
-  document.getElementById('confFill').style.background=masterSig==='BUY CE'?'var(--green)':masterSig==='BUY PE'?'var(--red)':'var(--amber)';
-  document.getElementById('confPct').textContent=masterConf+'%';
-  const ist=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
-  document.getElementById('spTime').textContent=ist.toLocaleTimeString('en-IN',{hour12:false});
-  document.getElementById('spCandle').textContent=document.getElementById('candleIntervalSel').value.replace('_MINUTE',' MIN');
-
-  addLog(`Scan: CE:${ceVotes} PE:${peVotes} WAIT:${waitVotes} → ${masterSig}`,'sig');
-
-  // ── EXIT LOGIC (check first) ──
-  if(BOT.inTrade){
-    const trade=BOT.inTrade;
-    const curPrice=getOptionPrice(spot, trade.type, trade.strike);
-    const pnlPct=(curPrice-trade.entryOptionPrice)/trade.entryOptionPrice*100;
-    const pnl=(pnlPct/100)*trade.capitalUsed;
-    trade.currentPrice=curPrice;trade.pnlPct=pnlPct;trade.pnl=pnl;trade.heldCandles++;
-
-    updateActiveTradeUI(trade, spot);
-
-    let exitReason=null;
-    if(pnlPct<=-BOT.slPct)exitReason=`SL hit -${BOT.slPct}%`;
-    else if(pnlPct>=BOT.tpPct)exitReason=`Target +${BOT.tpPct}%`;
-    else if(trade.heldCandles>=12)exitReason='Time exit (12 candles)';
-    else if(masterSig!=='WAIT'&&masterSig!==`BUY ${trade.type}`)exitReason='Reverse signal';
-
-    if(exitReason) exitTrade(exitReason, curPrice, spot);
-  }
-
-  // ── ENTRY LOGIC ──
-  if(!BOT.inTrade && masterSig!=='WAIT') {
-    const h=ist.getHours(),m=ist.getMinutes();
-    const marketOpen=(h>9||(h===9&&m>=15));
-    const notTooLate=h<14||(h===14&&m<30);
-    const notMaxTrades=BOT.tradesToday<BOT.maxTradesPerDay;
-    if(marketOpen&&notTooLate&&notMaxTrades){
-      enterTrade(masterSig, spot, ceVotes, peVotes, results);
-    } else {
-      if(!notMaxTrades)addLog(`Max ${BOT.maxTradesPerDay} trades/day reached`,'inf');
-      if(!notTooLate)addLog('After 2:30PM — no new entries','inf');
-    }
-  }
+  // Update all UI
+  updateBotCards(spot);
+  updateLeaderboard();
+  drawEquityAll();
+  updateArenaStats();
+  addLog(`Scan done. Spot: ${spot.toFixed(2)}`,'ok');
 }
 
-function enterTrade(signal, spot, ceVotes, peVotes, results){
-  const type=signal==='BUY CE'?'CE':'PE';
-  const strike=getNearestStrike(spot);
-  const optionPrice=getOptionPrice(spot, type, strike);
-  const capitalUsed=BOT.capitalPerTrade;
-  const slPrice=optionPrice*(1-BOT.slPct/100);
-  const tpPrice=optionPrice*(1+BOT.tpPct/100);
-  const topReasons=results.filter(r=>r.sig===signal).map(r=>r.reason).slice(0,3).join(', ');
-
-  BOT.inTrade={
-    type, strike, entrySpot:spot, entryOptionPrice:optionPrice,
-    currentPrice:optionPrice, slPrice, tpPrice, capitalUsed,
-    ceVotes, peVotes, pnl:0, pnlPct:0, heldCandles:0,
-    entryTime:new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}),
-    expiry:getNearestExpiry(), topReasons
-  };
-  BOT.tradesToday++;
-  addLog(`🟢 ENTERED ${type} | Strike: ${strike} | Premium: ₹${optionPrice.toFixed(0)} | Votes: ${signal==='BUY CE'?ceVotes:peVotes}/15 | ${topReasons}`,'trade');
-  document.getElementById('noTradeMsg').style.display='none';
-  document.getElementById('activeTradePnl').style.display='block';
-  updateActiveTradeUI(BOT.inTrade, spot);
+// ═══════════════════════════════════════════════
+// TRADE FEED
+// ═══════════════════════════════════════════════
+function addFeedEvent(ts,botName,action,strike,type,entryPx,exitPx,pnl,pnlPct,reason){
+  feedEvents.unshift({ts,botName,action,strike,type,entryPx,exitPx,pnl,pnlPct,reason});
+  if(feedEvents.length>500)feedEvents.pop();
+  renderFeed();
 }
-
-function exitTrade(reason, exitOptionPrice, spot){
-  if(!BOT.inTrade)return;
-  const trade=BOT.inTrade;
-  const pnl=(trade.pnlPct/100)*trade.capitalUsed;
-  BOT.balance+=pnl;BOT.dayPnl+=pnl;
-  BOT.equityCurve.push(BOT.balance);
-  if(pnl>0)BOT.wins++;
-  addLog(`${pnl>=0?'🟢':'🔴'} EXITED ${trade.type} | Premium exit: ₹${exitOptionPrice.toFixed(0)} | P&L: ${pnl>=0?'+':''}₹${pnl.toFixed(0)} (${trade.pnlPct.toFixed(1)}%) | Reason: ${reason}`,'trade');
-
-  // Add to history
-  BOT.tradeHistory.unshift({...trade, exitOptionPrice, pnl, reason, exitTime:new Date().toLocaleTimeString('en-IN',{hour12:false,timeZone:'Asia/Kolkata'})});
-  updateHistoryTable();
-  updateStats();
-  drawEquity();
-
-  BOT.inTrade=null;
-  document.getElementById('noTradeMsg').style.display='block';
-  document.getElementById('activeTradePnl').style.display='none';
-}
-
-function manualExit(){
-  if(!BOT.inTrade)return;
-  const spot=BOT.lastSpot||22000;
-  const curPrice=getOptionPrice(spot,BOT.inTrade.type,BOT.inTrade.strike);
-  BOT.inTrade.currentPrice=curPrice;
-  BOT.inTrade.pnlPct=(curPrice-BOT.inTrade.entryOptionPrice)/BOT.inTrade.entryOptionPrice*100;
-  exitTrade('Manual exit',curPrice,spot);
-}
-
-function updateActiveTradeUI(trade, spot){
-  document.getElementById('atType').textContent=`BUY ${trade.type}`;
-  document.getElementById('atType').className=`at-type ${trade.type.toLowerCase()}`;
-  document.getElementById('atStrike').textContent=`${trade.strike} ${trade.type} | Exp: ${trade.expiry}`;
-  document.getElementById('atEntry').textContent=`₹${trade.entryOptionPrice.toFixed(0)}`;
-  document.getElementById('atCur').textContent=`₹${trade.currentPrice.toFixed(0)}`;
-  document.getElementById('atCapUsed').textContent=`₹${fmt(trade.capitalUsed)}`;
-  document.getElementById('atSL').textContent=`₹${trade.slPrice.toFixed(0)} (-${BOT.slPct}%)`;
-  document.getElementById('atTP').textContent=`₹${trade.tpPrice.toFixed(0)} (+${BOT.tpPct}%)`;
-  document.getElementById('atHeld').textContent=trade.heldCandles;
-  const pnl=trade.pnl,pos=pnl>=0;
-  const pnlEl=document.getElementById('atPnlLive');
-  pnlEl.textContent=`${pos?'+':''}₹${pnl.toFixed(0)} (${pos?'+':''}${trade.pnlPct.toFixed(1)}%)`;
-  pnlEl.style.color=pos?'var(--green)':'var(--red)';
-  // SL bar: 0=SL, 50=entry, 100=TP
-  const range=trade.tpPrice-trade.slPrice;
-  const pct=range>0?(trade.currentPrice-trade.slPrice)/range*100:50;
-  const bar=document.getElementById('slBarFill');
-  bar.style.width=Math.min(100,Math.max(0,pct))+'%';
-  bar.style.background=pct>=50?'var(--green)':'var(--red)';
-  document.getElementById('slBarSL').textContent=`SL ₹${trade.slPrice.toFixed(0)}`;
-  document.getElementById('slBarTP').textContent=`TP ₹${trade.tpPrice.toFixed(0)}`;
-}
-
-function updateHistoryTable(){
-  const tbody=document.getElementById('histBody');
-  const total=BOT.tradeHistory.length;
-  document.getElementById('histCount').textContent=total+' trades';
-  tbody.innerHTML=BOT.tradeHistory.slice(0,50).map(t=>{
-    const pos=t.pnl>=0;
-    return `<tr>
-      <td style="color:var(--muted)">${t.exitTime||'--'}</td>
-      <td><span class="ttype ${t.type==='CE'?'tce':'tpe'}">${t.type}</span></td>
-      <td>${t.strike}</td>
-      <td>₹${t.entryOptionPrice.toFixed(0)}</td>
-      <td>₹${t.exitOptionPrice.toFixed(0)}</td>
-      <td class="${pos?'pp':'np'}">${pos?'+':''}₹${t.pnl.toFixed(0)}</td>
-      <td class="${pos?'pp':'np'}">${pos?'+':''}${t.pnlPct.toFixed(1)}%</td>
-      <td style="font-size:9px">${t.ceVotes}CE/${t.peVotes}PE</td>
-      <td style="color:var(--muted);font-size:9px">${t.reason}</td>
-    </tr>`;
+function renderFeed(){
+  const body=document.getElementById('tradeFeedBody');
+  document.getElementById('feedCount').textContent=feedEvents.length+' events';
+  body.innerHTML=feedEvents.slice(0,100).map(e=>{
+    const isExit=e.action==='EXIT';
+    const pnlStr=isExit?(e.pnl>=0?`<span class="pp">+₹${e.pnl.toFixed(0)}</span>`:`<span class="np">-₹${Math.abs(e.pnl).toFixed(0)}</span>`):'-';
+    const retStr=isExit?(e.pnlPct>=0?`<span class="pp">+${e.pnlPct.toFixed(1)}%</span>`:`<span class="np">${e.pnlPct.toFixed(1)}%</span>`):'-';
+    return `<div class="trade-row">
+      <span style="color:var(--muted)">${e.ts}</span>
+      <span style="color:var(--blue);font-weight:700">${e.botName}</span>
+      <span style="${isExit?'color:var(--red)':'color:var(--green)'};font-weight:700">${e.action}</span>
+      <span>${e.strike} ${e.type?`<span class="ttype ${e.type==='CE'?'tce':'tpe'}">${e.type}</span>`:''}</span>
+      <span>₹${e.entryPx?.toFixed(0)||'--'}</span>
+      ${pnlStr}
+      ${retStr}
+      <span style="color:var(--muted);font-size:9px">${e.reason||'--'}</span>
+    </div>`;
   }).join('');
 }
 
-function updateStats(){
-  const total=BOT.tradeHistory.length;
-  const wr=total?(BOT.wins/total*100).toFixed(1):0;
-  const pnl=BOT.balance-BOT.startCapital,pnlPct=(pnl/BOT.startCapital*100);
-  document.getElementById('bsBalance').textContent='₹'+fmt(BOT.balance);
-  document.getElementById('bsBalance').style.color=pnl>=0?'var(--green)':'var(--red)';
-  document.getElementById('bsBalSub').textContent=`${pnl>=0?'+':''}₹${fmt(pnl)} (${pnlPct.toFixed(2)}%)`;
-  document.getElementById('bsBalSub').style.color=pnl>=0?'var(--green)':'var(--red)';
-  const dp=BOT.dayPnl;
-  document.getElementById('bsDayPnl').textContent=`${dp>=0?'+':''}₹${fmt(dp)}`;
-  document.getElementById('bsDayPnl').style.color=dp>=0?'var(--green)':'var(--red)';
-  document.getElementById('bsDaySub').textContent=`${BOT.tradesToday} trades today`;
-  document.getElementById('bsWinRate').textContent=total?wr+'%':'--';
-  document.getElementById('bsWinRate').style.color=wr>=55?'var(--green)':wr>=45?'var(--amber)':'var(--red)';
-  document.getElementById('bsWRSub').textContent=total?`${BOT.wins}W ${total-BOT.wins}L`:'no trades yet';
-  document.getElementById('eqLabel').textContent=`₹${fmt(BOT.startCapital)} start → ₹${fmt(BOT.balance)} now`;
+// ═══════════════════════════════════════════════
+// RENDER BOT CARDS
+// ═══════════════════════════════════════════════
+function initBotCards(){
+  const grid=document.getElementById('botsGrid');
+  grid.innerHTML=BOTS.map(b=>`
+    <div class="bot-card" id="bc${b.id}">
+      <div class="bc-rank rx" id="bcr${b.id}">#${b.id+1}</div>
+      <div class="bc-name">${b.name}</div>
+      <div class="bc-type">${b.type}</div>
+      <div class="bc-bal" id="bcbal${b.id}" style="color:var(--text)">₹10,000</div>
+      <div class="bc-pnl zero" id="bcpnl${b.id}">+₹0 (0%)</div>
+      <div class="bc-trade idle" id="bctrade${b.id}">💤 Idle</div>
+      <div class="bc-signal" id="bcsig${b.id}">--</div>
+      <div class="bc-bar"><div class="bc-bar-fill" id="bcbar${b.id}" style="width:50%;background:var(--muted)"></div></div>
+      <div class="bc-stats">
+        <div class="bc-stat"><div class="bc-stat-lbl">Trades</div><div class="bc-stat-val" id="bctr${b.id}">0</div></div>
+        <div class="bc-stat"><div class="bc-stat-lbl">Win%</div><div class="bc-stat-val" id="bcwr${b.id}">--</div></div>
+        <div class="bc-stat"><div class="bc-stat-lbl">Signal</div><div class="bc-stat-val" id="bclsig${b.id}" style="font-size:9px">WAIT</div></div>
+      </div>
+    </div>`).join('');
+}
+initBotCards();
+
+function updateBotCards(spot){
+  const sorted=[...BOTS].sort((a,b)=>b.balance-a.balance);
+  const rankMap={};sorted.forEach((b,i)=>rankMap[b.id]=i);
+  BOTS.forEach(b=>{
+    const rank=rankMap[b.id]+1;
+    const pnl=b.balance-b.startBalance,pct=(pnl/b.startBalance*100);
+    const pos=pnl>=0;
+    document.getElementById(`bcbal${b.id}`).textContent='₹'+b.balance.toLocaleString('en-IN',{maximumFractionDigits:0});
+    document.getElementById(`bcbal${b.id}`).style.color=pnl>0?'var(--green)':pnl<0?'var(--red)':'var(--text)';
+    const pnlEl=document.getElementById(`bcpnl${b.id}`);
+    pnlEl.textContent=`${pos?'+':'-'}₹${Math.abs(pnl).toFixed(0)} (${pos?'+':''}${pct.toFixed(1)}%)`;
+    pnlEl.className=`bc-pnl ${pos?'pos':pnl<0?'neg':'zero'}`;
+    const tradeEl=document.getElementById(`bctrade${b.id}`);
+    if(b.inTrade){
+      const t=b.inTrade,curOpt=getOptionPrice(spot||22000,t.strike,t.type,getDaysToExpiry());
+      const tp=(curOpt-t.entryPrice)/t.entryPrice*100;
+      tradeEl.textContent=`${t.type} ${t.strike} | ${tp>=0?'+':''}${tp.toFixed(1)}%`;
+      tradeEl.className=`bc-trade ${t.type.toLowerCase()}`;
+    }else{tradeEl.textContent='💤 Idle';tradeEl.className='bc-trade idle';}
+    document.getElementById(`bcsig${b.id}`).textContent=b.lastReason.substring(0,30);
+    document.getElementById(`bctr${b.id}`).textContent=b.trades;
+    const wr=b.trades?(b.wins/b.trades*100).toFixed(0)+'%':'--';
+    document.getElementById(`bcwr${b.id}`).textContent=wr;
+    document.getElementById(`bclsig${b.id}`).textContent=b.lastSig==='BUY CE'?'CE↑':b.lastSig==='BUY PE'?'PE↓':'WAIT';
+    document.getElementById(`bclsig${b.id}`).style.color=b.lastSig==='BUY CE'?'var(--green)':b.lastSig==='BUY PE'?'var(--red)':'var(--muted)';
+    const card=document.getElementById(`bc${b.id}`);
+    card.className=`bot-card ${b.inTrade?('trading-'+b.inTrade.type.toLowerCase()):''} ${rank===1?'winner':''}`;
+    const rankEl=document.getElementById(`bcr${b.id}`);
+    rankEl.textContent=rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'#'+rank;
+    rankEl.className=`bc-rank ${rank===1?'r1':rank===2?'r2':rank===3?'r3':'rx'}`;
+    const barPct=Math.min(100,Math.max(0,50+pct*2));
+    document.getElementById(`bcbar${b.id}`).style.width=barPct+'%';
+    document.getElementById(`bcbar${b.id}`).style.background=pos?'var(--green)':'var(--red)';
+  });
 }
 
-function drawEquity(){
+function updateLeaderboard(){
+  const sorted=[...BOTS].sort((a,b)=>b.balance-a.balance);
+  const tbody=document.getElementById('lbBody');
+  tbody.innerHTML=sorted.map((b,i)=>{
+    const pnl=b.balance-b.startBalance,pct=(pnl/b.startBalance*100),pos=pnl>=0;
+    const wr=b.trades?(b.wins/b.trades*100).toFixed(1)+'%':'--';
+    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'rx';
+    const rl=i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`;
+    const status=b.inTrade?`<span class="ttype ${b.inTrade.type==='CE'?'tce':'tpe'}">${b.inTrade.type}</span>`:'-';
+    return `<tr class="${i===0?'lb-top':''}">
+      <td><span class="rank-badge ${rc}">${rl}</span></td>
+      <td style="font-weight:600">${b.name} <span style="font-size:9px;color:var(--muted)">${b.type}</span></td>
+      <td>₹${b.balance.toLocaleString('en-IN',{maximumFractionDigits:0})}</td>
+      <td class="${pos?'pp':'np'}">${pos?'+':'-'}₹${Math.abs(pnl).toFixed(0)} (${pos?'+':''}${pct.toFixed(1)}%)</td>
+      <td>${b.trades}</td>
+      <td style="color:${parseFloat(wr)>=55?'var(--green)':parseFloat(wr)>=45?'var(--amber)':'var(--red)'}">${wr}</td>
+      <td>${status}</td>
+    </tr>`;
+  }).join('');
+  const ist=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
+  document.getElementById('lbUpdate').textContent=ist.toLocaleTimeString('en-IN',{hour12:false});
+}
+
+function updateArenaStats(){
+  const totalPnl=BOTS.reduce((s,b)=>s+b.balance-b.startBalance,0);
+  const totalTrades=BOTS.reduce((s,b)=>s+b.trades,0);
+  const leader=BOTS.reduce((best,b)=>b.balance>best.balance?b:best,BOTS[0]);
+  document.getElementById('asTotalPnl').textContent=(totalPnl>=0?'+':'-')+'₹'+Math.abs(totalPnl).toFixed(0);
+  document.getElementById('asTotalPnl').style.color=totalPnl>=0?'var(--green)':'var(--red)';
+  document.getElementById('asTotalSub').textContent='₹'+(BOTS.length*10000).toLocaleString('en-IN')+' total capital';
+  document.getElementById('asLeader').textContent=leader.name;
+  const lPnl=leader.balance-leader.startBalance;
+  document.getElementById('asLeaderPnl').textContent=(lPnl>=0?'+':'-')+'₹'+Math.abs(lPnl).toFixed(0)+' ('+( lPnl/10000*100).toFixed(1)+'%)';
+  document.getElementById('asLeaderPnl').style.color=lPnl>=0?'var(--green)':'var(--red)';
+  document.getElementById('asTrades').textContent=totalTrades;
+}
+
+// ═══════════════════════════════════════════════
+// DRAW EQUITY ALL BOTS
+// ═══════════════════════════════════════════════
+const BOT_COLORS=['#0fcc7e','#f03a5f','#33b5f5','#f09d0d','#9b7ff5','#ff6b6b','#4ecdc4','#45b7d1','#96ceb4','#ffeaa7','#dfe6e9','#fd79a8','#6c5ce7','#00b894','#e17055'];
+function drawEquityAll(){
   const canvas=document.getElementById('eqCanvas'),ctx=canvas.getContext('2d');
-  canvas.width=canvas.parentElement.offsetWidth||900;canvas.height=80;
-  const curve=BOT.equityCurve,W=canvas.width,H=80,pad=8;
-  ctx.clearRect(0,0,W,H);if(curve.length<2)return;
-  const mn=Math.min(...curve)*0.998,mx=Math.max(...curve)*1.002;
-  const sx=i=>pad+(i/(curve.length-1))*(W-pad*2);
-  const sy=v=>H-pad-((v-mn)/(mx-mn))*(H-pad*2);
-  const above=curve[curve.length-1]>=BOT.startCapital;
-  ctx.beginPath();ctx.moveTo(sx(0),sy(curve[0]));curve.forEach((v,i)=>ctx.lineTo(sx(i),sy(v)));
-  ctx.lineTo(sx(curve.length-1),H-pad);ctx.lineTo(sx(0),H-pad);ctx.closePath();
-  ctx.fillStyle=above?'rgba(15,204,126,0.08)':'rgba(240,58,95,0.08)';ctx.fill();
-  ctx.beginPath();ctx.moveTo(sx(0),sy(curve[0]));curve.forEach((v,i)=>ctx.lineTo(sx(i),sy(v)));
-  ctx.strokeStyle=above?'#0fcc7e':'#f03a5f';ctx.lineWidth=1.5;ctx.stroke();
+  canvas.width=canvas.parentElement.offsetWidth||700;canvas.height=160;
+  const W=canvas.width,H=160,pad=8;ctx.clearRect(0,0,W,H);
+  const allVals=BOTS.flatMap(b=>b.equityCurve);
+  if(allVals.length<2)return;
+  const mn=Math.min(...allVals)*0.998,mx=Math.max(...allVals)*1.002;
+  const maxLen=Math.max(...BOTS.map(b=>b.equityCurve.length));
+  const sx=i=>pad+(i/(Math.max(maxLen-1,1)))*(W-pad*2);
+  const sy=v=>H-pad-((v-mn)/(mx-mn||1))*(H-pad*2);
+  // Baseline
+  const by=sy(10000);ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.setLineDash([3,3]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,by);ctx.lineTo(W-pad,by);ctx.stroke();ctx.setLineDash([]);
+  BOTS.forEach((b,i)=>{
+    if(b.equityCurve.length<2)return;
+    ctx.beginPath();ctx.moveTo(sx(0),sy(b.equityCurve[0]));
+    b.equityCurve.forEach((v,j)=>ctx.lineTo(sx(j),sy(v)));
+    ctx.strokeStyle=BOT_COLORS[i];ctx.lineWidth=1.5;ctx.globalAlpha=0.8;ctx.stroke();ctx.globalAlpha=1;
+  });
+  ctx.fillStyle='rgba(100,116,139,0.8)';ctx.font='9px monospace';
+  ctx.fillText('₹'+mx.toFixed(0),2,pad+8);ctx.fillText('₹'+mn.toFixed(0),2,H-2);
 }
 
-// ═══════════════════════════════════════
-// BOT START / STOP
-// ═══════════════════════════════════════
-function startBot(){
-  if(!isLoggedIn&&!confirm('You are not logged in. Bot will use DEMO DATA. Continue?'))return;
-  BOT.running=true;
-  document.getElementById('botBadge').className='bot-badge running';
-  document.getElementById('botBadgeTxt').textContent='BOT RUNNING';
+// ═══════════════════════════════════════════════
+// ARENA START / STOP
+// ═══════════════════════════════════════════════
+function startArena(){
+  if(!isLoggedIn&&!confirm('Not logged in. Use DEMO DATA? Continue?'))return;
+  arenaRunning=true;
+  document.getElementById('arenaBadge').className='arena-badge running';
+  document.getElementById('arenaBadgeTxt').textContent='ARENA RUNNING';
   document.getElementById('startBtn').disabled=true;
   document.getElementById('stopBtn').disabled=false;
-  addLog('🤖 Bot started — scanning every '+(BOT.scanInterval/60000)+' min','ok');
-
-  // Immediate first scan
-  botScan();
-
-  // Countdown timer
-  let cd=BOT.scanInterval/1000;
-  BOT.cdTimer=setInterval(()=>{
+  addLog('🤖 Arena started — 15 bots active on '+(SCAN_INTERVAL/60000)+'-min scans','ok');
+  arenaScan();
+  let cd=SCAN_INTERVAL/1000;
+  arenaCdTimer=setInterval(()=>{
     cd--;
-    document.getElementById('nextScanTxt').textContent=`Next scan in ${cd}s`;
-    if(cd<=0){
-      botScan();
-      cd=BOT.scanInterval/1000;
-    }
+    document.getElementById('asNext').textContent=cd+'s';
+    document.getElementById('asInterval').textContent='every '+(SCAN_INTERVAL/60000)+' min';
+    if(cd<=0){arenaScan();cd=SCAN_INTERVAL/1000;}
   },1000);
 }
 
-function stopBot(){
-  BOT.running=false;
-  clearInterval(BOT.cdTimer);
-  document.getElementById('botBadge').className='bot-badge stopped';
-  document.getElementById('botBadgeTxt').textContent='BOT STOPPED';
+function stopArena(){
+  arenaRunning=false;clearInterval(arenaCdTimer);
+  document.getElementById('arenaBadge').className='arena-badge stopped';
+  document.getElementById('arenaBadgeTxt').textContent='ARENA STOPPED';
   document.getElementById('startBtn').disabled=false;
   document.getElementById('stopBtn').disabled=true;
-  document.getElementById('nextScanTxt').textContent='';
-  addLog('🛑 Bot stopped','err');
-  if(BOT.inTrade){addLog('⚠ Open trade still active — manual exit if needed','err');}
+  document.getElementById('asNext').textContent='--';
+  addLog('🛑 Arena stopped','err');
 }
 
-function resetBot(){
-  if(!confirm('Reset all paper trading data? This clears balance, trades, and history.'))return;
-  stopBot();
-  BOT.balance=BOT.startCapital;BOT.dayPnl=0;BOT.tradesToday=0;BOT.wins=0;
-  BOT.tradeHistory=[];BOT.equityCurve=[BOT.startCapital];BOT.inTrade=null;
-  document.getElementById('noTradeMsg').style.display='block';
-  document.getElementById('activeTradePnl').style.display='none';
-  document.getElementById('histBody').innerHTML='<tr><td colspan="9" style="color:var(--muted);text-align:center;padding:20px">No trades yet</td></tr>';
-  updateStats();drawEquity();
-  addLog('Bot reset — balance restored to ₹1,00,000','ok');
+function resetArena(){
+  if(!confirm('Reset all 15 bots? Clears all balances, trades, history.'))return;
+  stopArena();
+  BOTS.forEach(b=>{b.balance=10000;b.pnl=0;b.trades=0;b.wins=0;b.inTrade=null;b.equityCurve=[10000];b.todayTrades=0;b.lastSig='WAIT';b.lastReason='--';});
+  feedEvents=[];
+  document.getElementById('tradeFeedBody').innerHTML='';
+  document.getElementById('feedCount').textContent='0 events';
+  updateBotCards(22000);updateLeaderboard();drawEquityAll();updateArenaStats();
+  addLog('Arena reset — all bots at ₹10,000','ok');
 }
 
-// ═══════════════════════════════════════
-// DEMO DATA
-// ═══════════════════════════════════════
-function genDemoCandles(days,sp=22200){
+// ═══════════════════════════════════════════════
+// DEMO SCAN
+// ═══════════════════════════════════════════════
+function runDemoScan(){
+  cachedCandles=genDemo(3);
+  addLog('Running demo scan...','inf');
+  const c=cachedCandles;
+  const C=c.map(x=>parseFloat(x[4]));
+  const H=c.map(x=>parseFloat(x[2]));
+  const L=c.map(x=>parseFloat(x[3]));
+  const V=c.map(x=>x[5]);
+  const spot=C[C.length-1];
+  const dte=getDaysToExpiry();
+  const slTp=document.getElementById('slSel').value.split('_');
+  const slPct=parseInt(slTp[0]),tpPct=parseInt(slTp[1]);
+  document.getElementById('asSpot').textContent=spot.toFixed(2);
+  document.getElementById('asExpiry').textContent=getExpiryStr();
+  BOTS.forEach(bot=>{
+    let sig='WAIT',reason='--';
+    try{sig=bot.signal(C,H,L,V,c)||'WAIT';}catch(e){}
+    try{reason=bot.reason(C,H,L,V,c)||'--';}catch(e){}
+    bot.lastSig=sig;bot.lastReason=reason;
+    if(!bot.inTrade&&sig!=='WAIT'){
+      const type=sig==='BUY CE'?'CE':'PE';
+      const strike=getATMStrike(spot);
+      const optPrice=getOptionPrice(spot,strike,type,dte);
+      const capitalUsed=10000;
+      bot.inTrade={type,strike,entrySpot:spot,entryPrice:optPrice,curPrice:optPrice,capitalUsed,heldCandles:0,pnl:0,pnlPct:0,slPrice:optPrice*(1-slPct/100),tpPrice:optPrice*(1+tpPct/100)};
+      const ts=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'})).toLocaleTimeString('en-IN',{hour12:false});
+      addFeedEvent(ts,bot.name,'ENTER',strike,type,optPrice,null,null,null,reason);
+      addLog(`[${bot.name}] DEMO ENTER ${type} ${strike} ₹${optPrice.toFixed(0)}`,'sig');
+    }
+  });
+  if(!isLoggedIn)document.getElementById('startBtn').disabled=false;
+  updateBotCards(spot);updateLeaderboard();drawEquityAll();updateArenaStats();
+}
+
+// ═══════════════════════════════════════════════
+// DEMO DATA GENERATOR
+// ═══════════════════════════════════════════════
+function genDemo(days,sp=22200){
   const c=[];let price=sp;const base=Date.now()-days*86400000;
   for(let i=0;i<days*75;i++){
-    const t=new Date(base+i*5*60000);
-    const h=t.getHours(),m=t.getMinutes();
+    const t=new Date(base+i*5*60000);const h=t.getHours(),m=t.getMinutes();
     if(h<9||(h===9&&m<15)||h>=15)continue;
     const chg=Math.sin(i/10)*12+(Math.random()-0.5)*18;
     const o=price,cl=o+chg,hi=Math.max(o,cl)+Math.random()*8,lo=Math.min(o,cl)-Math.random()*8;
@@ -850,35 +842,152 @@ function genDemoCandles(days,sp=22200){
   return c;
 }
 
-function useDemoData(){
-  BOT.lastCandles=genDemoCandles(3);
-  addLog('Demo data loaded','inf');
-  const c=BOT.lastCandles;
-  const C=c.map(x=>parseFloat(x[4]));
-  const H=c.map(x=>parseFloat(x[2]));
-  const L=c.map(x=>parseFloat(x[3]));
-  const V=c.map(x=>x[5]);
-  BOT.lastSpot=C[C.length-1];
-  document.getElementById('bsSpot').textContent=C[C.length-1].toFixed(2);
-  let ce=0,pe=0,wa=0;
-  STRATEGIES.forEach((s,i)=>{
-    let r={sig:'WAIT',reason:'--'};try{r=s.fn(C,H,L,V,c)||r;}catch(e){}
-    r.sig=r.sig||'WAIT';
-    if(r.sig==='BUY CE')ce++;else if(r.sig==='BUY PE')pe++;else wa++;
-    const card=document.getElementById(`smc${i}`),sigEl=document.getElementById(`smcsig${i}`);
-    if(card&&sigEl){card.className=`smc ${r.sig==='BUY CE'?'ce':r.sig==='BUY PE'?'pe':''}`;sigEl.className=`smc-sig ${r.sig==='BUY CE'?'g':r.sig==='BUY PE'?'r':'a'}`;sigEl.textContent=r.sig==='BUY CE'?'CE ↑':r.sig==='BUY PE'?'PE ↓':'WAIT';}
-  });
-  const ms=ce>=8?'BUY CE':pe>=8?'BUY PE':'WAIT';
-  document.getElementById('spVal').textContent=ms;
-  document.getElementById('spVal').className=`sp-val ${ms==='BUY CE'?'g':ms==='BUY PE'?'r':'a'}`;
-  document.getElementById('vpCE').textContent=`CE: ${ce}`;document.getElementById('vpPE').textContent=`PE: ${pe}`;document.getElementById('vpWA').textContent=`WAIT: ${wa}`;
-  document.getElementById('spSub').textContent=`Demo: CE:${ce} PE:${pe} WAIT:${wa}`;
-  if(!isLoggedIn)document.getElementById('startBtn').disabled=false;
+// ═══════════════════════════════════════════════
+// BACKTEST ENGINE — all 15 bots
+// ═══════════════════════════════════════════════
+let btResults=[];
+async function runBacktest(){
+  const days=parseInt(document.getElementById('btPeriod').value);
+  const capital=parseFloat(document.getElementById('btCap').value)||10000;
+  const slTp=document.getElementById('btSlTp').value.split('_');
+  const slPct=parseInt(slTp[0]),tpPct=parseInt(slTp[1]);
+  const interval=document.getElementById('btCandle').value;
+  setBtS(`Preparing ${days}-day backtest for all 15 bots...`);setBtP(5);
+  let candles;
+  if(isLoggedIn){
+    try{
+      setBtS('Fetching historical data from Angel One...');
+      const now=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
+      const from=new Date(now);from.setDate(from.getDate()-days);
+      const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+      const res=await fetch('https://apiconnect.angelbroking.com/rest/secure/angelbroking/historical/v1/getCandleData',{method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+jwtToken,'X-UserType':'USER','X-SourceID':'WEB','X-ClientLocalIP':'127.0.0.1','X-ClientPublicIP':'127.0.0.1','X-MACAddress':'00:00:00:00:00:00','X-PrivateKey':CREDS.apiKey},
+        body:JSON.stringify({exchange:'NSE',symboltoken:'99926000',interval,fromdate:fmt(from),todate:fmt(now)})});
+      const d=await res.json();candles=d.data||[];
+      addLog(`BT: fetched ${candles.length} candles`,'ok');
+    }catch(e){addLog('BT API error: '+e.message,'err');candles=genDemo(days,21500);setBtS('Using demo data.');}
+  }else{candles=genDemo(days,21500);setBtS('Using demo data (not logged in).');}
+  setBtP(15);if(candles.length<40){setBtS('Not enough candle data.');return;}
+  btResults=[];
+  for(let bi=0;bi<BOTS.length;bi++){
+    const bot=BOTS[bi];
+    setBtS(`Backtesting bot ${bi+1}/15: ${bot.name}...`);
+    setBtP(15+bi*(75/BOTS.length));
+    await sleep(5);
+    btResults.push({bot,res:runOneBotBT(bot,candles,capital,slPct,tpPct)});
+  }
+  setBtP(95);renderBtResults(btResults,days,capital);setBtP(100);
+  setBtS(`Done. ${days} days, ${candles.length} candles, ${BOTS.length} bots.`);
 }
 
-// Init
-updateStats();drawEquity();
-addLog('Bot loaded. 15 strategies ready on 5-min candles.','ok');
+function runOneBotBT(bot,candles,capital,slPct,tpPct){
+  const C=candles.map(c=>parseFloat(c[4])),H=candles.map(c=>parseFloat(c[2])),L=candles.map(c=>parseFloat(c[3])),V=candles.map(c=>c[5]);
+  const trades=[],ec=[capital];
+  let bal=capital,peak=capital,maxDD=0,inTrade=null,wins=0;
+  for(let i=30;i<C.length;i++){
+    let sig='WAIT';
+    try{sig=bot.signal(C.slice(0,i+1),H.slice(0,i+1),L.slice(0,i+1),V.slice(0,i+1),candles.slice(0,i+1))||'WAIT';}catch(e){}
+    const spot=C[i],dte=Math.max(1,3),time=candles[i][0];
+    if(inTrade){
+      const curOpt=getOptionPrice(spot,inTrade.strike,inTrade.type,dte);
+      const pnlPct=(curOpt-inTrade.ep)/inTrade.ep*100;
+      inTrade.held++;
+      const reverse=(inTrade.type==='CE'&&sig==='BUY PE')||(inTrade.type==='PE'&&sig==='BUY CE');
+      const exit=pnlPct<=-slPct||pnlPct>=tpPct||inTrade.held>=12||reverse;
+      if(exit){
+        const pnl=(pnlPct/100)*capital;bal+=pnl;if(bal>peak)peak=bal;const dd=(peak-bal)/peak*100;if(dd>maxDD)maxDD=dd;
+        if(pnl>0)wins++;
+        const reason=pnlPct<=-slPct?`SL -${slPct}%`:pnlPct>=tpPct?`TP +${tpPct}%`:inTrade.held>=12?'Time':reverse?'Reverse':'--';
+        trades.push({et:time,type:inTrade.type,strike:inTrade.strike,ep:inTrade.ep,xp:curOpt,pnl,pnlPct,reason});
+        ec.push(bal);inTrade=null;
+      }
+    }
+    if(!inTrade&&sig!=='WAIT'){
+      const type=sig==='BUY CE'?'CE':'PE';
+      const strike=getATMStrike(spot);
+      const optPrice=getOptionPrice(spot,strike,type,dte);
+      inTrade={type,strike,ep:optPrice,held:0};
+    }
+  }
+  const totalPnl=trades.reduce((s,t)=>s+t.pnl,0);
+  const best=trades.length?Math.max(...trades.map(t=>t.pnl)):0;
+  return{trades,wins,totalPnl,maxDD,bestTrade:best,ec,finalBal:bal};
+}
+
+function renderBtResults(results,days,capital){
+  const sorted=[...results].sort((a,b)=>{const wr1=a.res.trades.length?a.res.wins/a.res.trades.length:0,wr2=b.res.trades.length?b.res.wins/b.res.trades.length:0;return wr2-wr1;});
+  const best=sorted[0];const pr=best.res;
+  document.getElementById('btSum').style.display='grid';
+  document.getElementById('bsBot').textContent=best.bot.name;
+  const bwr=pr.trades.length?(pr.wins/pr.trades.length*100).toFixed(1):0;
+  document.getElementById('bsBot').style.color=parseFloat(bwr)>=55?'var(--green)':parseFloat(bwr)>=45?'var(--amber)':'var(--red)';
+  document.getElementById('bsWR').textContent=bwr+'%';document.getElementById('bsWR').style.color=parseFloat(bwr)>=55?'var(--green)':'var(--red)';
+  document.getElementById('bsWRSub').textContent=`${pr.wins}W ${pr.trades.length-pr.wins}L`;
+  const bestPnlEntry=results.reduce((b,r)=>r.res.totalPnl>b.res.totalPnl?r:b,results[0]);
+  document.getElementById('bsPnl').textContent=(bestPnlEntry.res.totalPnl>=0?'+':'')+bestPnlEntry.res.totalPnl.toFixed(0)+'₹';
+  document.getElementById('bsPnl').style.color=bestPnlEntry.res.totalPnl>=0?'var(--green)':'var(--red)';
+  document.getElementById('bsPnlSub').textContent=bestPnlEntry.bot.name;
+  document.getElementById('bsProf').textContent=results.filter(r=>r.res.totalPnl>0).length+'/15';
+  document.getElementById('bsTrades').textContent=results.reduce((s,r)=>s+r.res.trades.length,0);
+  // Bot cards
+  const btGrid=document.getElementById('btBotGrid');btGrid.style.display='grid';
+  btGrid.innerHTML=sorted.map(({bot,res},i)=>{
+    const wr=res.trades.length?(res.wins/res.trades.length*100).toFixed(1):0;
+    const pos=res.totalPnl>=0;
+    return `<div class="bt-bot-card ${i===0?'bt-winner':''}">
+      <div style="font-size:9px;margin-bottom:4px"><span class="rank-badge ${i===0?'r1':i===1?'r2':i===2?'r3':'rx'}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1)}</span></div>
+      <div class="bt-bot-name">${bot.name}</div>
+      <div class="bt-bot-wr" style="color:${parseFloat(wr)>=55?'var(--green)':parseFloat(wr)>=45?'var(--amber)':'var(--red)'}">${wr}%</div>
+      <div class="bt-bot-pnl ${pos?'pp':'np'}">${pos?'+':'-'}₹${Math.abs(res.totalPnl).toFixed(0)}</div>
+      <div class="bt-bot-sub">${res.trades.length} trades | DD: ${res.maxDD.toFixed(1)}%</div>
+    </div>`;
+  }).join('');
+  // Detail table
+  document.getElementById('btDetailPanel').style.display='block';
+  document.getElementById('btDetailLbl').textContent=`${best.bot.name} — ${pr.trades.length} trades`;
+  document.getElementById('btTradeLog').innerHTML=pr.trades.slice().reverse().map(t=>{
+    const pos=t.pnl>=0,d=new Date(t.et);
+    const dt=d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',timeZone:'Asia/Kolkata'});
+    const tm=d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Kolkata'});
+    return `<div class="trade-row">
+      <span style="color:var(--muted)">${dt} ${tm}</span>
+      <span class="ttype ${t.type==='CE'?'tce':'tpe'}">${t.type}</span>
+      <span>${t.strike}</span>
+      <span>₹${t.ep.toFixed(0)}</span><span>₹${t.xp.toFixed(0)}</span>
+      <span class="${pos?'pp':'np'}">${pos?'+':'-'}₹${Math.abs(t.pnl).toFixed(0)}</span>
+      <span class="${pos?'pp':'np'}">${pos?'+':''}${t.pnlPct.toFixed(1)}%</span>
+      <span style="color:var(--muted);font-size:9px">${t.reason}</span>
+    </div>`;
+  }).join('');
+  // Equity chart
+  document.getElementById('btEqPanel').style.display='block';
+  document.getElementById('btEqLbl').textContent=`${days} days — all 15 bots`;
+  drawBtEquity(sorted.map(r=>r.res.ec),capital);
+}
+
+function drawBtEquity(curves,cap){
+  const canvas=document.getElementById('btEqCanvas'),ctx=canvas.getContext('2d');
+  canvas.width=canvas.parentElement.offsetWidth||900;canvas.height=160;
+  const W=canvas.width,H=160,pad=8;ctx.clearRect(0,0,W,H);
+  const allV=curves.flat();if(allV.length<2)return;
+  const mn=Math.min(...allV)*0.998,mx=Math.max(...allV)*1.002;
+  const maxLen=Math.max(...curves.map(c=>c.length));
+  const sx=i=>pad+(i/(Math.max(maxLen-1,1)))*(W-pad*2);
+  const sy=v=>H-pad-((v-mn)/(mx-mn||1))*(H-pad*2);
+  const by=sy(cap);ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.setLineDash([3,3]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,by);ctx.lineTo(W-pad,by);ctx.stroke();ctx.setLineDash([]);
+  curves.forEach((curve,i)=>{if(curve.length<2)return;ctx.beginPath();ctx.moveTo(sx(0),sy(curve[0]));curve.forEach((v,j)=>ctx.lineTo(sx(j),sy(v)));ctx.strokeStyle=BOT_COLORS[i];ctx.lineWidth=1.5;ctx.globalAlpha=0.75;ctx.stroke();ctx.globalAlpha=1;});
+  ctx.fillStyle='rgba(100,116,139,0.8)';ctx.font='9px monospace';
+  ctx.fillText('₹'+mx.toFixed(0),2,pad+8);ctx.fillText('₹'+mn.toFixed(0),2,H-2);
+}
+
+function setBtS(m){document.getElementById('btStatus').textContent=m;}
+function setBtP(p){document.getElementById('btPF').style.width=p+'%';}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// INIT
+updateLeaderboard();drawEquityAll();updateArenaStats();
+document.getElementById('asExpiry').textContent=getExpiryStr();
+addLog('15 independent bots loaded. Each with ₹10,000 demo capital. Black-Scholes option pricing active.','ok');
 </script>
 </body>
 </html>
