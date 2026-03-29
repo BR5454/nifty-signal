@@ -441,7 +441,7 @@ const BOTS=BOT_DEFS.map(d=>({
   pnl:0, trades:0, wins:0,
   inTrade:null, equityCurve:[10000],
   lastSig:'WAIT', lastReason:'--',
-  todayTrades:0, maxDailyTrades:3
+  todayTrades:0, maxDailyTrades:10
 }));
 
 // ═══════════════════════════════════════════════
@@ -572,18 +572,23 @@ async function arenaScan(){
     if(!bot.inTrade&&sig!=='WAIT'){
       const ist2=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
       const h2=ist2.getHours(),m2=ist2.getMinutes();
-      const canEnter=(h2>9||(h2===9&&m2>=15))&&(h2<14||(h2===14&&m2<30));
-      if(canEnter&&bot.todayTrades<bot.maxDailyTrades){
+      // Allow entry 9:15 AM to 3:15 PM IST (or always in demo/paper mode)
+      const marketOpen=(h2>9||(h2===9&&m2>=15));
+      const notTooLate=(h2<15||(h2===15&&m2<=15));
+      // If not logged in (demo mode) OR market is open, allow entry anytime during demo
+      // Paper trading: enter if market open OR demo mode (bypass time for demo)
+      const paperMode=!isLoggedIn;
+      const canEnter=((paperMode||(marketOpen&&notTooLate))&&bot.balance>100&&bot.todayTrades<bot.maxDailyTrades);
+      if(!canEnter&&!paperMode) addLog(`[${bot.name}] Blocked: market closed or max trades reached`,'inf');
+      if(canEnter){
         const type=sig==='BUY CE'?'CE':'PE';
         const optPrice=getOptionPrice(spot,strike,type,dte);
         const capitalUsed=Math.min(bot.balance,10000);
-        if(capitalUsed>=optPrice*50*0.5){
-          bot.inTrade={type,strike,entrySpot:spot,entryPrice:optPrice,curPrice:optPrice,capitalUsed,heldCandles:0,pnl:0,pnlPct:0,slPrice:optPrice*(1-slPct/100),tpPrice:optPrice*(1+tpPct/100)};
-          bot.todayTrades++;
-          const ts2=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'})).toLocaleTimeString('en-IN',{hour12:false});
-          addLog(`[${bot.name}] ENTER ${type} ${strike} | Premium ₹${optPrice.toFixed(0)} | ${reason}`,'sig');
-          addFeedEvent(ts2,bot.name,'ENTER',strike,type,optPrice,null,null,null,reason);
-        }
+        bot.inTrade={type,strike,entrySpot:spot,entryPrice:optPrice,curPrice:optPrice,capitalUsed,heldCandles:0,pnl:0,pnlPct:0,slPrice:optPrice*(1-slPct/100),tpPrice:optPrice*(1+tpPct/100)};
+        bot.todayTrades++;
+        const ts2=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'})).toLocaleTimeString('en-IN',{hour12:false});
+        addLog(`[${bot.name}] ENTER ${type} ${strike} | Premium ₹${optPrice.toFixed(0)} | ${reason}`,'sig');
+        addFeedEvent(ts2,bot.name,'ENTER',strike,type,optPrice,null,null,null,reason);
       }
     }
   });
@@ -781,7 +786,7 @@ function stopArena(){
 function resetArena(){
   if(!confirm('Reset all 15 bots? Clears all balances, trades, history.'))return;
   stopArena();
-  BOTS.forEach(b=>{b.balance=10000;b.pnl=0;b.trades=0;b.wins=0;b.inTrade=null;b.equityCurve=[10000];b.todayTrades=0;b.lastSig='WAIT';b.lastReason='--';});
+  BOTS.forEach(b=>{b.balance=10000;b.pnl=0;b.trades=0;b.wins=0;b.inTrade=null;b.equityCurve=[10000];b.todayTrades=0;b.maxDailyTrades=10;b.lastSig='WAIT';b.lastReason='--';});
   feedEvents=[];
   document.getElementById('tradeFeedBody').innerHTML='';
   document.getElementById('feedCount').textContent='0 events';
